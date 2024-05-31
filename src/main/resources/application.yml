@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: API de Beneficiario
+
+api:
+  info:
+    contact:
+      email: contato@ekan.com.br
+      name: Equipe Ekan
+      url: https://ekan.com.br/contato.html
+    description: '@description@'
+    license: Copyright 2023 Ekan - Todos os direitos reservados.
+    licenseUrl: https://ekan.com.br/legal/licenca.html
+    termsOfServiceUrl: https://ekan.com.br/legal/termos.html
+    title: '@name@'
+    version: '@version@'
+

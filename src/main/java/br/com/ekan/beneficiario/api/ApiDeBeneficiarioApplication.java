@@ -1,4 +1,4 @@
-package br.com.ekan.beneficiario_api;
+package br.com.ekan.beneficiario.api;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
