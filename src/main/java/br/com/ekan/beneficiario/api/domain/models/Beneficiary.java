@@ -17,7 +17,7 @@ import lombok.experimental.SuperBuilder;
 @Data
 @SuperBuilder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
-public class Beneficiario extends AbstractModel {
+public class Beneficiary extends AbstractModel {
 
     @Nullable
     @Size(min = 1, max = 100, message = "Deve ter entre 1 e 30 caracteres")
@@ -30,14 +30,15 @@ public class Beneficiario extends AbstractModel {
     private String phoneNumber;
 
 	@NotNull(message = "Não pode ser nulo")
+	@EqualsAndHashCode.Include
 	private LocalDate birthDate;
 	
 	@Nullable
-	@Singular("documento")
+	@Singular("document")
 	@ToString.Exclude
 	private List<
 		@NotNull(message = "Não pode ser nulo") 
-		Documento> documentoList;
+		Document> documentList;
 
     public boolean hasUpdate() {
         return this.name != null

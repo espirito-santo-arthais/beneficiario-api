@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import br.com.ekan.beneficiario.api.domain.exceptions.AbstractDomainException;
 import br.com.ekan.beneficiario.api.domain.exceptions.InternalServerErrorDomainException;
 import br.com.ekan.beneficiario.api.domain.exceptions.WarningDomainException;
-import br.com.ekan.beneficiario.api.domain.models.Beneficiario;
+import br.com.ekan.beneficiario.api.domain.models.Beneficiary;
 import br.com.ekan.beneficiario.api.infrastructure.database.exceptions.AbstractDatabaseException;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,7 +27,7 @@ public class BeneficiarioDomainServiceImpl implements BeneficiarioDomainService 
 	//}
 
 	@Override
-	public Beneficiario post(final Beneficiario model) {
+	public Beneficiary post(final Beneficiary model) {
 		log.info("Salvando o modelo...");
 		log.debug("model: {}", model);
 
@@ -39,9 +39,9 @@ public class BeneficiarioDomainServiceImpl implements BeneficiarioDomainService 
 		}
 
 		try {
-			Beneficiario createdModel = databaseService.post(model);
+			Beneficiary createdModel = databaseService.post(model);
 
-			final Beneficiario finalCreatedModelForFeign = createdModel; // Cria uma cópia final do model
+			final Beneficiary finalCreatedModelForFeign = createdModel; // Cria uma cópia final do model
 
 			// TODO: implementar a chamada ao Client Feign, se cabível
 
@@ -63,7 +63,7 @@ public class BeneficiarioDomainServiceImpl implements BeneficiarioDomainService 
 	}
 
 	@Override
-	public Beneficiario patch(final UUID id, final Beneficiario model) {
+	public Beneficiary patch(final UUID id, final Beneficiary model) {
 		log.info("Atualizando o modelo...");
 		log.debug("id: {}", id);
 		log.debug("model: {}", model);
@@ -83,7 +83,7 @@ public class BeneficiarioDomainServiceImpl implements BeneficiarioDomainService 
 		}
 
 		try {
-			Beneficiario storedModel = databaseService.getById(model.getId());
+			Beneficiary storedModel = databaseService.getById(model.getId());
 			if (model.hasUpdate()) {
 	            if (!Objects.equals(model.getName(), storedModel.getName())) {
 	                storedModel.setName(model.getName());
@@ -101,7 +101,7 @@ public class BeneficiarioDomainServiceImpl implements BeneficiarioDomainService 
 				storedModel = databaseService.patch(id, storedModel);
 			}
 
-			final Beneficiario finalCreatedModelForFeign = storedModel; // Cria uma cópia final do model
+			final Beneficiary finalCreatedModelForFeign = storedModel; // Cria uma cópia final do model
 			
 			// TODO: implementar a chamada ao Client Feign, se cabível
 
@@ -125,11 +125,11 @@ public class BeneficiarioDomainServiceImpl implements BeneficiarioDomainService 
 	}
 
 	@Override
-	public Beneficiario delete(final UUID id) {
+	public Beneficiary delete(final UUID id) {
 		log.info("Excluindo o modelo... ID = {}", id);
 
 		try {
-			Beneficiario model = databaseService.delete(id);
+			Beneficiary model = databaseService.delete(id);
 
 			// TODO: implementar a chamada ao Client Feign, se cabível
 
@@ -151,11 +151,11 @@ public class BeneficiarioDomainServiceImpl implements BeneficiarioDomainService 
 	}
 
 	@Override
-	public Beneficiario getById(final UUID id) {
+	public Beneficiary getById(final UUID id) {
 		log.info("Recuperando o modelo... ID = {}", id);
 
 		try {
-			Beneficiario model = databaseService.getById(id);
+			Beneficiary model = databaseService.getById(id);
 
 			// TODO: implementar a chamada ao Client Feign, se cabível
 
@@ -177,11 +177,11 @@ public class BeneficiarioDomainServiceImpl implements BeneficiarioDomainService 
 	}
 
 	@Override
-	public List<Beneficiario> getAll() {
+	public List<Beneficiary> getAll() {
 		log.info("Recuperando todos os modelos...");
 
 		try {
-			List<Beneficiario> modelList = databaseService.getAll();
+			List<Beneficiary> modelList = databaseService.getAll();
 
 			// TODO: implementar a chamada ao Client Feign, se cabível
 

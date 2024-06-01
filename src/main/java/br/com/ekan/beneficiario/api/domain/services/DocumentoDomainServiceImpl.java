@@ -24,7 +24,7 @@ public class DocumentoDomainServiceImpl implements DocumentoDomainService {
 		ProgramUserIntegrationResourceMapper,
 		ProgramUserIntegration, 
 		DocumentoDomainService> resourceService;
-	protected final ProgramUserIntegrationDatabaseService databaseService;
+	protected final DocumentDatabaseService databaseService;
 
 	public DocumentoDomainServiceImpl(
 			@Lazy ProgramUserIntegrationResourceService<
@@ -34,7 +34,7 @@ public class DocumentoDomainServiceImpl implements DocumentoDomainService {
 				ProgramUserIntegrationResourceMapper,
 				ProgramUserIntegration,
 				DocumentoDomainService> resourceService,
-			@Lazy ProgramUserIntegrationDatabaseService databaseService) {
+			@Lazy DocumentDatabaseService databaseService) {
 		this.resourceService = resourceService;
 		this.databaseService = databaseService;
 	}

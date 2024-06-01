@@ -1,13 +1,14 @@
 package br.com.ekan.beneficiario.api.infrastructure.database.entities;
 
-import java.util.Objects;
+import java.time.LocalDate;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.validation.constraints.NotNull;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
@@ -16,27 +17,19 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
+@EqualsAndHashCode
 public abstract class AbstractEntity {
 
 	@Id
 	@NotNull(message = "Não pode ser nulo")
-	public String id;
+	protected String id;
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		AbstractEntity other = (AbstractEntity) obj;
-		return Objects.equals(id, other.id);
-	}
+	@Column(name = "dataInclusao")
+	@NotNull(message = "Não pode ser nulo")
+	protected LocalDate insertDate;
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(id);
-	}
+	@Column(name = "dataAtualizacao")
+	@NotNull(message = "Não pode ser nulo")
+	protected LocalDate updateDate;
 	
 }

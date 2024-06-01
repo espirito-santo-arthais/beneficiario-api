@@ -3,7 +3,7 @@ package br.com.ekan.beneficiario.api.resources.services;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
-import br.com.ekan.beneficiario.api.domain.models.Beneficiario;
+import br.com.ekan.beneficiario.api.domain.models.Beneficiary;
 import br.com.ekan.beneficiario.api.domain.services.DomainService;
 import br.com.ekan.beneficiario.api.resources.dtos.requests.BeneficiarioCreateRequestDto;
 import br.com.ekan.beneficiario.api.resources.dtos.requests.BeneficiarioUpdateRequestDto;
@@ -22,8 +22,8 @@ public class BeneficiarioResourceServiceImpl
 				BeneficiarioCreateRequestDto, 
 				BeneficiarioUpdateRequestDto, 
 				BeneficiarioResponseDto, 
-				Beneficiario>, 
-			Beneficiario, 
+				Beneficiary>, 
+			Beneficiary, 
 			BeneficiarioDomainService>
 		implements BeneficiarioResourceService<
 			BeneficiarioCreateRequestDto, 
@@ -33,16 +33,16 @@ public class BeneficiarioResourceServiceImpl
 				BeneficiarioCreateRequestDto, 
 				BeneficiarioUpdateRequestDto, 
 				BeneficiarioResponseDto, 
-				Beneficiario>, 
-			Beneficiario, 
+				Beneficiary>, 
+			Beneficiary, 
 			BeneficiarioDomainService> {
 
-	protected final ResourceMapper<BeneficiarioCreateRequestDto, BeneficiarioUpdateRequestDto, BeneficiarioResponseDto, Beneficiario> mapper;
-	protected final DomainService<Beneficiario> domainService;
+	protected final ResourceMapper<BeneficiarioCreateRequestDto, BeneficiarioUpdateRequestDto, BeneficiarioResponseDto, Beneficiary> mapper;
+	protected final DomainService<Beneficiary> domainService;
 
 	public BeneficiarioResourceServiceImpl(
-			@Lazy ResourceMapper<BeneficiarioCreateRequestDto, BeneficiarioUpdateRequestDto, BeneficiarioResponseDto, Beneficiario> mapper, 
-			@Lazy DomainService<Beneficiario> domainService) {
+			@Lazy ResourceMapper<BeneficiarioCreateRequestDto, BeneficiarioUpdateRequestDto, BeneficiarioResponseDto, Beneficiary> mapper, 
+			@Lazy DomainService<Beneficiary> domainService) {
 		super(mapper, domainService);
 		this.mapper = mapper;
 		this.domainService = domainService;

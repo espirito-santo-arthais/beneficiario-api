@@ -3,7 +3,7 @@ package br.com.ekan.beneficiario.api.resources.services;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
-import br.com.ekan.beneficiario.api.domain.models.Documento;
+import br.com.ekan.beneficiario.api.domain.models.Document;
 import br.com.ekan.beneficiario.api.domain.services.DomainService;
 import br.com.ekan.beneficiario.api.resources.dtos.requests.DocumentoCreateRequestDto;
 import br.com.ekan.beneficiario.api.resources.dtos.requests.DocumentoUpdateRequestDto;
@@ -22,8 +22,8 @@ public class DocumentoResourceServiceImpl
 			DocumentoCreateRequestDto, 
 			DocumentoUpdateRequestDto, 
 			DocumentoResponseDto, 
-			Documento>, 
-		Documento, 
+			Document>, 
+		Document, 
 		BeneficiarioDomainService>
 	implements DocumentoResourceService<
 		DocumentoCreateRequestDto, 
@@ -33,16 +33,16 @@ public class DocumentoResourceServiceImpl
 			DocumentoCreateRequestDto, 
 			DocumentoUpdateRequestDto, 
 			DocumentoResponseDto, 
-			Documento>, 
-		Documento, 
+			Document>, 
+		Document, 
 		BeneficiarioDomainService> {
 
-	protected final ResourceMapper<DocumentoCreateRequestDto, DocumentoUpdateRequestDto, DocumentoResponseDto, Documento> mapper;
-	protected final DomainService<Documento> domainService;
+	protected final ResourceMapper<DocumentoCreateRequestDto, DocumentoUpdateRequestDto, DocumentoResponseDto, Document> mapper;
+	protected final DomainService<Document> domainService;
 
 	public DocumentoResourceServiceImpl(
-			@Lazy ResourceMapper<DocumentoCreateRequestDto, DocumentoUpdateRequestDto, DocumentoResponseDto,	Documento> mapper, 
-			@Lazy DomainService<Documento> domainService) {
+			@Lazy ResourceMapper<DocumentoCreateRequestDto, DocumentoUpdateRequestDto, DocumentoResponseDto,	Document> mapper, 
+			@Lazy DomainService<Document> domainService) {
 		super(mapper, domainService);
 		this.mapper = mapper;
 		this.domainService = domainService;

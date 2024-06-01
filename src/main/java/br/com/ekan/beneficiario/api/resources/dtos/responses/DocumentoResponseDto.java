@@ -2,7 +2,7 @@ package br.com.ekan.beneficiario.api.resources.dtos.responses;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import br.com.ekan.beneficiario.api.domain.enums.TipoDocumentoEnum;
+import br.com.ekan.beneficiario.api.domain.enums.DocumentTypeEnum;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -22,7 +22,7 @@ import lombok.experimental.SuperBuilder;
 public class DocumentoResponseDto extends AbstractResponseDto {
 
 	@NotNull(message = "Não pode ser nulo")
-	private TipoDocumentoEnum tipoDocumentoEnum;
+	private DocumentTypeEnum documentTypeEnum;
 
 	@NotNull(message = "Não pode ser nulo")
 	@Size(	min = 1,

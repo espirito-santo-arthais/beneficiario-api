@@ -1,13 +1,13 @@
 package br.com.ekan.beneficiario.api.domain.enums;
 
-public enum TipoDocumentoEnum {
+public enum DocumentTypeEnum {
 	CPF("CPF", "CPF do beneficiário"),
 	RG("RG", "Registro geral (carteira de identidade) do beneficiário");
 
 	private final String label;
 	private final String description;
 
-	TipoDocumentoEnum(String label, String description) {
+	DocumentTypeEnum(String label, String description) {
 		this.label = label;
 		this.description = description;
 	}

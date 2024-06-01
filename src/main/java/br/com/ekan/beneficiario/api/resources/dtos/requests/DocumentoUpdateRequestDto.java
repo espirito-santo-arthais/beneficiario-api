@@ -2,7 +2,7 @@ package br.com.ekan.beneficiario.api.resources.dtos.requests;
 
 import org.springframework.lang.Nullable;
 
-import br.com.ekan.beneficiario.api.domain.enums.TipoDocumentoEnum;
+import br.com.ekan.beneficiario.api.domain.enums.DocumentTypeEnum;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -22,7 +22,7 @@ public class DocumentoUpdateRequestDto extends AbstractUpdateRequestDto {
 
 	@Nullable
 	@EqualsAndHashCode.Include
-	private TipoDocumentoEnum tipoDocumentoEnum;
+	private DocumentTypeEnum documentTypeEnum;
 
 	@Nullable
 	@Size(	min = 1,
@@ -31,7 +31,7 @@ public class DocumentoUpdateRequestDto extends AbstractUpdateRequestDto {
 	private String descricao;
 
 	public boolean hasUpdate() {
-		return this.tipoDocumentoEnum != null
+		return this.documentTypeEnum != null
 				|| this.descricao != null;
 	}
 
