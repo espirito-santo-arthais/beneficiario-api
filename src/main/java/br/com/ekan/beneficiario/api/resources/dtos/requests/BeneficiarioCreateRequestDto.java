@@ -1,6 +1,6 @@
 package br.com.ekan.beneficiario.api.resources.dtos.requests;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.lang.Nullable;
@@ -36,7 +36,7 @@ public class BeneficiarioCreateRequestDto extends AbstractCreateRequestDto {
 	private String phoneNumber;
 
 	@NotNull(message = "Não pode ser nulo")
-	private LocalDateTime birthDate;
+	private LocalDate birthDate;
 
 	@Nullable
 	@Singular("documento")

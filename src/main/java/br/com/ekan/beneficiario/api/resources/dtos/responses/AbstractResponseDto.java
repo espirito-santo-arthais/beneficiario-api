@@ -21,12 +21,12 @@ import lombok.experimental.SuperBuilder;
 public abstract class AbstractResponseDto extends AbstractDto {
 
 	@NotNull(message = "Não pode ser nulo")
-	public UUID id;
+	protected UUID id;
 
 	@NotNull(message = "Não pode ser nulo")
-	private LocalDate insertDate;
+	protected LocalDate insertDate;
 
 	@NotNull(message = "Não pode ser nulo")
-	private LocalDate updateDate;
+	protected LocalDate updateDate;
 
 }

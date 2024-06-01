@@ -1,27 +1,26 @@
-package br.com.ekan.beneficiario.api.resources.dtos.requests;
+package br.com.ekan.beneficiario.api.infrastructure.database.entities;
 
 import java.util.Objects;
-import java.util.UUID;
 
+import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
 import jakarta.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-@Getter
-@Setter
-@ToString
+@MappedSuperclass
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public abstract class AbstractUpdateRequestDto extends AbstractRequestDto {
+public abstract class AbstractEntity {
 
+	@Id
 	@NotNull(message = "Não pode ser nulo")
-	protected UUID id;
+	public String id;
 
 	@Override
 	public boolean equals(Object obj) {
@@ -29,9 +28,9 @@ public abstract class AbstractUpdateRequestDto extends AbstractRequestDto {
 			return true;
 		if (obj == null)
 			return false;
-		if (obj == null || getClass() != obj.getClass())
+		if (getClass() != obj.getClass())
 			return false;
-		AbstractUpdateRequestDto other = (AbstractUpdateRequestDto) obj;
+		AbstractEntity other = (AbstractEntity) obj;
 		return Objects.equals(id, other.id);
 	}
 
@@ -39,5 +38,5 @@ public abstract class AbstractUpdateRequestDto extends AbstractRequestDto {
 	public int hashCode() {
 		return Objects.hash(id);
 	}
-
+	
 }

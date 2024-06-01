@@ -1,5 +1,6 @@
 package br.com.ekan.beneficiario.api.resources.dtos.requests;
 
+import br.com.ekan.beneficiario.api.resources.dtos.AbstractDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,6 +12,6 @@ import lombok.experimental.SuperBuilder;
 @ToString
 @AllArgsConstructor
 @SuperBuilder
-public abstract class AbstractRequestDto extends br.com.ekan.beneficiario.api.resources.dtos.AbstractDto {
+public abstract class AbstractRequestDto extends AbstractDto {
 
 }

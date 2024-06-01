@@ -22,7 +22,7 @@ import lombok.experimental.SuperBuilder;
 public class DocumentoResponseDto extends AbstractResponseDto {
 
 	@NotNull(message = "Não pode ser nulo")
-	private TipoDocumentoEnum internalPlatformEnum;
+	private TipoDocumentoEnum tipoDocumentoEnum;
 
 	@NotNull(message = "Não pode ser nulo")
 	@Size(	min = 1,

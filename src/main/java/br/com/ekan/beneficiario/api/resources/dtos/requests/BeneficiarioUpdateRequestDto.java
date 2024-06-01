@@ -1,6 +1,6 @@
 package br.com.ekan.beneficiario.api.resources.dtos.requests;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import org.springframework.lang.Nullable;
 
@@ -34,7 +34,7 @@ public class BeneficiarioUpdateRequestDto extends AbstractUpdateRequestDto {
 	private String phoneNumber;
 
 	@NotNull(message = "Não pode ser nulo")
-	private LocalDateTime birthDate;
+	private LocalDate birthDate;
 
 	public boolean hasUpdate() {
 		return this.name != null

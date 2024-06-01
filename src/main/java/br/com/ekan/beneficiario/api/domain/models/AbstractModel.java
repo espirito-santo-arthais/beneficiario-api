@@ -1,27 +1,31 @@
-package br.com.ekan.beneficiario.api.resources.dtos.requests;
+package br.com.ekan.beneficiario.api.domain.models;
 
+import java.time.LocalDate;
 import java.util.Objects;
 import java.util.UUID;
 
 import jakarta.validation.constraints.NotNull;
-
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-@Getter
-@Setter
-@ToString
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public abstract class AbstractUpdateRequestDto extends AbstractRequestDto {
+public abstract class AbstractModel {
 
 	@NotNull(message = "Não pode ser nulo")
+	@EqualsAndHashCode.Include
 	protected UUID id;
+
+	@NotNull(message = "Não pode ser nulo")
+	protected LocalDate insertDate;
+
+	@NotNull(message = "Não pode ser nulo")
+	protected LocalDate updateDate;
 
 	@Override
 	public boolean equals(Object obj) {
@@ -31,7 +35,7 @@ public abstract class AbstractUpdateRequestDto extends AbstractRequestDto {
 			return false;
 		if (obj == null || getClass() != obj.getClass())
 			return false;
-		AbstractUpdateRequestDto other = (AbstractUpdateRequestDto) obj;
+		AbstractModel other = (AbstractModel) obj;
 		return Objects.equals(id, other.id);
 	}
 
