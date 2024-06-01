@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -13,41 +12,39 @@ import br.com.ekan.beneficiario.api.domain.exceptions.InternalServerErrorDomainE
 import br.com.ekan.beneficiario.api.domain.exceptions.WarningDomainException;
 import br.com.ekan.beneficiario.api.domain.models.Beneficiary;
 import br.com.ekan.beneficiario.api.infrastructure.database.exceptions.AbstractDatabaseException;
+import br.com.ekan.beneficiario.api.infrastructure.database.services.BeneficiaryDatabaseService;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class BeneficiarioDomainServiceImpl implements BeneficiarioDomainService {
+public class BeneficiaryDomainServiceImpl implements BeneficiaryDomainService {
 
-	//protected final BeneficiarioDatabaseService databaseService;
+	private final BeneficiaryDatabaseService databaseService;
 
-	//public BeneficiarioDomainServiceImpl(
-	//		@Lazy BeneficiarioDatabaseService databaseService) {
-	//	this.databaseService = databaseService;
-	//}
+	public BeneficiaryDomainServiceImpl(@Lazy BeneficiaryDatabaseService databaseService) {
+		this.databaseService = databaseService;
+	}
 
 	@Override
 	public Beneficiary post(final Beneficiary model) {
-		log.info("Salvando o modelo...");
+		log.info("Salvando o beneficiário...");
 		log.debug("model: {}", model);
 
 		if (model.getId() == null) {
 			Object[] args = { "model.id" };
 			String message = String.format("O atributo %1s não pode ser nulo.", args);
-			log.error(message);
+			log.warn(message);
 			throw new WarningDomainException(message);
 		}
 
 		try {
 			Beneficiary createdModel = databaseService.post(model);
 
-			final Beneficiary finalCreatedModelForFeign = createdModel; // Cria uma cópia final do model
-
-			// TODO: implementar a chamada ao Client Feign, se cabível
-
+			// Garante que qualquer atualização feita na camada de persistência será
+			// recuperada.
 			createdModel = databaseService.getById(createdModel.getId());
 
-			log.info("Modelo salvo com sucesso!");
+			log.info("Beneficiário salvo com sucesso!");
 			log.debug("storedModel: {}", createdModel);
 
 			return createdModel;
@@ -56,7 +53,7 @@ public class BeneficiarioDomainServiceImpl implements BeneficiarioDomainService 
 		} catch (AbstractDomainException ex) {
 			throw ex;
 		} catch (Exception ex) {
-			String message = "Não foi possível salvar o modelo.";
+			String message = "Não foi possível salvar o beneficiário.";
 			log.error(message, ex);
 			throw new InternalServerErrorDomainException(message, ex);
 		}
@@ -64,21 +61,20 @@ public class BeneficiarioDomainServiceImpl implements BeneficiarioDomainService 
 
 	@Override
 	public Beneficiary patch(final UUID id, final Beneficiary model) {
-		log.info("Atualizando o modelo...");
+		log.info("Atualizando o beneficiário...");
 		log.debug("id: {}", id);
 		log.debug("model: {}", model);
 
 		if (model.getId() == null) {
 			Object[] args = { "model.id" };
 			String message = String.format("O atributo %1s não pode ser nulo.", args);
-			log.error(message);
+			log.warn(message);
 			throw new WarningDomainException(message);
 		}
 		if (model.getId().compareTo(id) != 0) {
 			Object[] args = { "model.id", "id", model.getId(), id };
-			String message = String
-					.format("O atributo %1s não pode ser diferente do parâmetro %2s. %1s = %3s, %2s = %4s", args);
-			log.error(message);
+			String message = String.format("O atributo %1s não pode ser diferente do parâmetro %2s. %1s = %3s, %2s = %4s", args);
+			log.warn(message);
 			throw new WarningDomainException(message);
 		}
 
@@ -94,31 +90,30 @@ public class BeneficiarioDomainServiceImpl implements BeneficiarioDomainService 
 	            if (!Objects.equals(model.getBirthDate(), storedModel.getBirthDate())) {
 	                storedModel.setBirthDate(model.getBirthDate());
 	            }
-	            if (!Objects.equals(model.getActive(), storedModel.getActive())) {
-	                storedModel.setActive(model.getActive());
+	            if (!Objects.equals(model.getInsertDate(), storedModel.getInsertDate())) {
+	                storedModel.setInsertDate(model.getInsertDate());
+	            }
+	            if (!Objects.equals(model.getUpdateDate(), storedModel.getUpdateDate())) {
+	                storedModel.setUpdateDate(model.getUpdateDate());
 	            }
 
 				storedModel = databaseService.patch(id, storedModel);
 			}
 
-			final Beneficiary finalCreatedModelForFeign = storedModel; // Cria uma cópia final do model
-			
-			// TODO: implementar a chamada ao Client Feign, se cabível
-
+			// Garante que qualquer atualização feita na camada de persistência será
+			// recuperada.
 			storedModel = databaseService.getById(model.getId());
 
-			log.info("Modelo atualizado com sucesso!");
+			log.info("Beneficiário atualizado com sucesso!");
 			log.debug("storedModel: {}", storedModel);
 
 			return storedModel;
 		} catch (AbstractDatabaseException ex) {
 			throw ex;
-		} catch (AbstractClientException ex) {
-			throw ex;
 		} catch (AbstractDomainException ex) {
 			throw ex;
 		} catch (Exception ex) {
-			String message = "Não foi possível atualizar o modelo.";
+			String message = "Não foi possível atualizar o beneficiário.";
 			log.error(message, ex);
 			throw new InternalServerErrorDomainException(message, ex);
 		}
@@ -126,25 +121,21 @@ public class BeneficiarioDomainServiceImpl implements BeneficiarioDomainService 
 
 	@Override
 	public Beneficiary delete(final UUID id) {
-		log.info("Excluindo o modelo... ID = {}", id);
+		log.info("Excluindo o beneficiário... ID = {}", id);
 
 		try {
 			Beneficiary model = databaseService.delete(id);
 
-			// TODO: implementar a chamada ao Client Feign, se cabível
-
-			log.info("Modelo excluído com sucesso!");
+			log.info("Beneficiário excluído com sucesso!");
 			log.debug("model: {}", model);
 
 			return model;
 		} catch (AbstractDatabaseException ex) {
 			throw ex;
-		} catch (AbstractClientException ex) {
-			throw ex;
 		} catch (AbstractDomainException ex) {
 			throw ex;
 		} catch (Exception ex) {
-			String message = "Não foi possível excluir o modelo.";
+			String message = "Não foi possível excluir o beneficiário.";
 			log.error(message, ex);
 			throw new InternalServerErrorDomainException(message, ex);
 		}
@@ -152,25 +143,21 @@ public class BeneficiarioDomainServiceImpl implements BeneficiarioDomainService 
 
 	@Override
 	public Beneficiary getById(final UUID id) {
-		log.info("Recuperando o modelo... ID = {}", id);
+		log.info("Recuperando o beneficiário... ID = {}", id);
 
 		try {
 			Beneficiary model = databaseService.getById(id);
 
-			// TODO: implementar a chamada ao Client Feign, se cabível
-
-			log.info("Modelo recuperado com sucesso!");
+			log.info("Beneficiário recuperado com sucesso!");
 			log.debug("model: {}", model);
 
 			return model;
 		} catch (AbstractDatabaseException ex) {
 			throw ex;
-		} catch (AbstractClientException ex) {
-			throw ex;
 		} catch (AbstractDomainException ex) {
 			throw ex;
 		} catch (Exception ex) {
-			String message = "Não foi possível recuperar o modelo.";
+			String message = "Não foi possível recuperar o beneficiário.";
 			log.error(message, ex);
 			throw new InternalServerErrorDomainException(message, ex);
 		}
@@ -178,24 +165,20 @@ public class BeneficiarioDomainServiceImpl implements BeneficiarioDomainService 
 
 	@Override
 	public List<Beneficiary> getAll() {
-		log.info("Recuperando todos os modelos...");
+		log.info("Recuperando todos os beneficiários...");
 
 		try {
 			List<Beneficiary> modelList = databaseService.getAll();
 
-			// TODO: implementar a chamada ao Client Feign, se cabível
-
-			log.info("Modelos recuperados com sucesso! Quantidade: {}", modelList.size());
+			log.info("Beneficiário recuperados com sucesso! Quantidade: {}", modelList.size());
 
 			return modelList;
 		} catch (AbstractDatabaseException ex) {
 			throw ex;
-		} catch (AbstractClientException ex) {
-			throw ex;
 		} catch (AbstractDomainException ex) {
 			throw ex;
 		} catch (Exception ex) {
-			String message = "Não foi possível recuperar os modelos.";
+			String message = "Não foi possível recuperar os beneficiários.";
 			log.error(message, ex);
 			throw new InternalServerErrorDomainException(message, ex);
 		}
@@ -205,24 +188,20 @@ public class BeneficiarioDomainServiceImpl implements BeneficiarioDomainService 
 
 	@Override
 	public long count() {
-		log.info("Contanto os modelos...");
+		log.info("Contanto os beneficiários...");
 
 		try {
 			long count = databaseService.count();
 
-			// TODO: implementar a chamada ao Client Feign, se cabível
-
-			log.info("Modelos contados com secusso! Quantidade: {}", count);
+			log.info("Beneficiários contados com secusso! Quantidade: {}", count);
 
 			return count;
 		} catch (AbstractDatabaseException ex) {
 			throw ex;
-		} catch (AbstractClientException ex) {
-			throw ex;
 		} catch (AbstractDomainException ex) {
 			throw ex;
 		} catch (Exception ex) {
-			String message = "Não foi possível contar os modelos.";
+			String message = "Não foi possível contar os beneficiários.";
 			log.error(message, ex);
 			throw new InternalServerErrorDomainException(message, ex);
 		}

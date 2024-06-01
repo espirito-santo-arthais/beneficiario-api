@@ -15,4 +15,8 @@ public interface DomainService<M> {
 
 	List<M> getAll();
 
+	// Contagens
+
+	long count();
+
 }

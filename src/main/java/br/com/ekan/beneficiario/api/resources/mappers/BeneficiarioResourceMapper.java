@@ -12,18 +12,18 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import br.com.ekan.beneficiario.api.domain.models.Beneficiary;
-import br.com.ekan.beneficiario.api.resources.dtos.requests.BeneficiarioCreateRequestDto;
-import br.com.ekan.beneficiario.api.resources.dtos.requests.BeneficiarioUpdateRequestDto;
-import br.com.ekan.beneficiario.api.resources.dtos.responses.BeneficiarioResponseDto;
+import br.com.ekan.beneficiario.api.resources.dtos.requests.BeneficiaryCreateRequestDto;
+import br.com.ekan.beneficiario.api.resources.dtos.requests.BeneficiaryUpdateRequestDto;
+import br.com.ekan.beneficiario.api.resources.dtos.responses.BeneficiaryResponseDto;
 import lombok.extern.slf4j.Slf4j;
 
 @Component
 @Slf4j
 public class BeneficiarioResourceMapper 
 	implements ResourceMapper<
-		BeneficiarioCreateRequestDto, 
-		BeneficiarioUpdateRequestDto, 
-		BeneficiarioResponseDto, 
+		BeneficiaryCreateRequestDto, 
+		BeneficiaryUpdateRequestDto, 
+		BeneficiaryResponseDto, 
 		Beneficiary> {
 
 	private final DocumentoResourceMapper documentoResourceMapper;
@@ -33,8 +33,8 @@ public class BeneficiarioResourceMapper
 	}
 
 	@Override
-	public Beneficiary toCreationModel(BeneficiarioCreateRequestDto dto) {
-	    log.info("Mapeando DTO {} para modelo {}...", BeneficiarioCreateRequestDto.class.getSimpleName(), Beneficiary.class.getSimpleName());
+	public Beneficiary toCreationModel(BeneficiaryCreateRequestDto dto) {
+	    log.info("Mapeando DTO {} para modelo {}...", BeneficiaryCreateRequestDto.class.getSimpleName(), Beneficiary.class.getSimpleName());
 	    log.debug("dto: {}", dto);
 
 	    return Optional.ofNullable(dto)
@@ -49,7 +49,7 @@ public class BeneficiarioResourceMapper
 	                            .birthDate(dtoTemp.getBirthDate())
 	                            .insertDate(now)
 	                            .updateDate(now)
-	                            .documentoList(documentoResourceMapper.toCreationModelList(dtoTemp.getDocumentoList()))
+	                            .documentList(documentoResourceMapper.toCreationModelList(dtoTemp.getDocumentoList()))
 	                    	    .build();
 	                    log.info("DTO mapeado para modelo com sucesso!");
 	                    log.debug("model: {}", model);
@@ -61,15 +61,15 @@ public class BeneficiarioResourceMapper
 	                }
 	            })
 	            .orElseGet(() -> {
-	                log.error("Tentativa de mapear DTO {} nulo para modelo {}", BeneficiarioCreateRequestDto.class.getSimpleName(), Beneficiary.class.getSimpleName());
+	                log.error("Tentativa de mapear DTO {} nulo para modelo {}", BeneficiaryCreateRequestDto.class.getSimpleName(), Beneficiary.class.getSimpleName());
                     // TODO: podemos retornar null ou lançar uma exceção customizada
 	                return null;
 	            });
 	}
 
 	@Override
-	public Beneficiary toUpdateModel(BeneficiarioUpdateRequestDto dto) {
-	    log.info("Mapeando DTO {} para modelo {}...", BeneficiarioUpdateRequestDto.class.getSimpleName(), Beneficiary.class.getSimpleName());
+	public Beneficiary toUpdateModel(BeneficiaryUpdateRequestDto dto) {
+	    log.info("Mapeando DTO {} para modelo {}...", BeneficiaryUpdateRequestDto.class.getSimpleName(), Beneficiary.class.getSimpleName());
 	    log.debug("dto: {}", dto);
 
 	    return Optional.ofNullable(dto)
@@ -94,27 +94,27 @@ public class BeneficiarioResourceMapper
 	                }
 	            })
 	            .orElseGet(() -> {
-	                log.error("Tentativa de mapear DTO {} nulo para modelo {}", BeneficiarioUpdateRequestDto.class.getSimpleName(), Beneficiary.class.getSimpleName());
+	                log.error("Tentativa de mapear DTO {} nulo para modelo {}", BeneficiaryUpdateRequestDto.class.getSimpleName(), Beneficiary.class.getSimpleName());
                     // TODO: podemos retornar null ou lançar uma exceção customizada
 	                return null;
 	            });
 	}
 
 	@Override
-	public BeneficiarioResponseDto toResponseDto(Beneficiary model) {
-	    log.info("Mapeando modelo {} para DTO {}...", Beneficiary.class.getSimpleName(), BeneficiarioResponseDto.class.getSimpleName());
+	public BeneficiaryResponseDto toResponseDto(Beneficiary model) {
+	    log.info("Mapeando modelo {} para DTO {}...", Beneficiary.class.getSimpleName(), BeneficiaryResponseDto.class.getSimpleName());
 	    log.info("model: {}", model);
 	    return Optional.ofNullable(model)
 	            .map(modelTemp -> {
 	                try {
-	                	BeneficiarioResponseDto dto = BeneficiarioResponseDto.builder()
+	                	BeneficiaryResponseDto dto = BeneficiaryResponseDto.builder()
 	                    		.id(modelTemp.getId())
 	                    		.name(modelTemp.getName())
 	                            .phoneNumber(modelTemp.getPhoneNumber())
 	                            .birthDate(modelTemp.getBirthDate())
 	                            .insertDate(modelTemp.getInsertDate())
 	                            .updateDate(modelTemp.getUpdateDate())
-	                            .documentoList(documentoResourceMapper.toResponseDtoList(modelTemp.getDocumentoList()))
+	                            .documentList(documentoResourceMapper.toResponseDtoList(modelTemp.getDocumentList()))
 	                            .build();
 	                    log.info("Modelo mapeado para DTO com sucesso!");
 	                    log.debug("dto: ", dto);
@@ -126,15 +126,15 @@ public class BeneficiarioResourceMapper
 	                }
 	            })
 	            .orElseGet(() -> {
-	                log.error("Tentativa de mapear modelo {} nula para DTO {}", Beneficiary.class.getSimpleName(), BeneficiarioResponseDto.class.getSimpleName());
+	                log.error("Tentativa de mapear modelo {} nula para DTO {}", Beneficiary.class.getSimpleName(), BeneficiaryResponseDto.class.getSimpleName());
                     // TODO: podemos retornar null ou lançar uma exceção customizada
 	                return null;
 	            });
 	}
 
 	@Override
-	public List<Beneficiary> toCreationModelList(List<BeneficiarioCreateRequestDto> dtos) {
-	    log.info("Iniciando mapeamento de lista de DTOs {} para lista de modelos {}", BeneficiarioCreateRequestDto.class.getSimpleName(), Beneficiary.class.getSimpleName());
+	public List<Beneficiary> toCreationModelList(List<BeneficiaryCreateRequestDto> dtos) {
+	    log.info("Iniciando mapeamento de lista de DTOs {} para lista de modelos {}", BeneficiaryCreateRequestDto.class.getSimpleName(), Beneficiary.class.getSimpleName());
 
 	    try {
 	        List<Beneficiary> models = Optional.ofNullable(dtos)
@@ -142,7 +142,7 @@ public class BeneficiarioResourceMapper
 	                             .map(this::toCreationModel)
 	                             .collect(Collectors.toList()))
 	            .orElseGet(() -> {
-	                log.error("Tentativa de mapear lista de {} nula para lista de {}", BeneficiarioCreateRequestDto.class.getSimpleName(), Beneficiary.class.getSimpleName());
+	                log.error("Tentativa de mapear lista de {} nula para lista de {}", BeneficiaryCreateRequestDto.class.getSimpleName(), Beneficiary.class.getSimpleName());
 	                // TODO: podemos retornar uma lista vazia ou lançar uma exceção customizada
 	                return Collections.emptyList();
 	            });
@@ -157,8 +157,8 @@ public class BeneficiarioResourceMapper
 	}
 
 	@Override
-	public List<Beneficiary> toUpdateModelList(List<BeneficiarioUpdateRequestDto> dtos) {
-	    log.info("Iniciando mapeamento de lista de DTOs {} para lista de modelos {}", BeneficiarioUpdateRequestDto.class.getSimpleName(), Beneficiary.class.getSimpleName());
+	public List<Beneficiary> toUpdateModelList(List<BeneficiaryUpdateRequestDto> dtos) {
+	    log.info("Iniciando mapeamento de lista de DTOs {} para lista de modelos {}", BeneficiaryUpdateRequestDto.class.getSimpleName(), Beneficiary.class.getSimpleName());
 
 	    try {
 	        List<Beneficiary> models = Optional.ofNullable(dtos)
@@ -166,7 +166,7 @@ public class BeneficiarioResourceMapper
 	                             .map(this::toUpdateModel)
 	                             .collect(Collectors.toList()))
 	            .orElseGet(() -> {
-	                log.error("Tentativa de mapear lista de DTOs {} nula para lista de modelos {}", BeneficiarioUpdateRequestDto.class.getSimpleName(), Beneficiary.class.getSimpleName());
+	                log.error("Tentativa de mapear lista de DTOs {} nula para lista de modelos {}", BeneficiaryUpdateRequestDto.class.getSimpleName(), Beneficiary.class.getSimpleName());
 	                // TODO: podemos retornar uma lista vazia ou lançar uma exceção customizada
 	                return Collections.emptyList();
 	            });
@@ -181,16 +181,16 @@ public class BeneficiarioResourceMapper
 	}
 
 	@Override
-	public List<BeneficiarioResponseDto> toResponseDtoList(List<Beneficiary> models) {
-	    log.info("Iniciando mapeamento de lista de modelos {} para lista de DTOs {}", Beneficiary.class.getSimpleName(), BeneficiarioResponseDto.class.getSimpleName());
+	public List<BeneficiaryResponseDto> toResponseDtoList(List<Beneficiary> models) {
+	    log.info("Iniciando mapeamento de lista de modelos {} para lista de DTOs {}", Beneficiary.class.getSimpleName(), BeneficiaryResponseDto.class.getSimpleName());
 
 	    try {
-	        List<BeneficiarioResponseDto> dtos = Optional.ofNullable(models)
+	        List<BeneficiaryResponseDto> dtos = Optional.ofNullable(models)
 	            .map(list -> list.stream()
 	                             .map(this::toResponseDto)
 	                             .collect(Collectors.toList()))
 	            .orElseGet(() -> {
-	                log.error("Tentativa de mapear lista de modelos {} nula para lista de DTOs {}", Beneficiary.class.getSimpleName(), BeneficiarioResponseDto.class.getSimpleName());
+	                log.error("Tentativa de mapear lista de modelos {} nula para lista de DTOs {}", Beneficiary.class.getSimpleName(), BeneficiaryResponseDto.class.getSimpleName());
 	                // TODO: podemos retornar uma lista vazia ou lançar uma exceção customizada
 	                return Collections.emptyList();
 	            });

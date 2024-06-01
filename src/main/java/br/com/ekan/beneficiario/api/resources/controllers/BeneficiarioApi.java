@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.ekan.beneficiario.api.resources.dtos.requests.BeneficiarioCreateRequestDto;
-import br.com.ekan.beneficiario.api.resources.dtos.requests.BeneficiarioUpdateRequestDto;
-import br.com.ekan.beneficiario.api.resources.dtos.responses.BeneficiarioResponseDto;
-import br.com.ekan.beneficiario.api.resources.dtos.responses.DocumentoResponseDto;
+import br.com.ekan.beneficiario.api.resources.dtos.requests.BeneficiaryCreateRequestDto;
+import br.com.ekan.beneficiario.api.resources.dtos.requests.BeneficiaryUpdateRequestDto;
+import br.com.ekan.beneficiario.api.resources.dtos.responses.BeneficiaryResponseDto;
+import br.com.ekan.beneficiario.api.resources.dtos.responses.DocumentResponseDto;
 import br.com.ekan.beneficiario.api.resources.structures.ApiReturn;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -84,14 +84,14 @@ public interface BeneficiarioApi {
 	@ApiResponses(value = { 
 			@ApiResponse(responseCode = "201", description = "Created (Criado): Um recurso foi criado com sucesso. Utilizado em respostas a requisições POST que resultam na criação de um novo recurso.") })
 	@ResponseStatus(HttpStatus.CREATED)
-	ResponseEntity<ApiReturn<BeneficiarioResponseDto>> post( 
+	ResponseEntity<ApiReturn<BeneficiaryResponseDto>> post( 
 			@Valid
 			@NotNull(message = "Não pode ser nulo")
 			@RequestBody(required = true)
 			@Parameter(
 					description = "DTO para envio de requisição", 
 					required = true)
-			BeneficiarioCreateRequestDto createRequest);
+			BeneficiaryCreateRequestDto createRequest);
 
 	@PatchMapping(value = "/{id}")
 	@Operation(
@@ -100,7 +100,7 @@ public interface BeneficiarioApi {
 	@ApiResponses(value = { 
 			@ApiResponse(responseCode = "200", description = "OK (Sucesso): A requisição foi bem-sucedida e a resposta contém os dados esperados."),
 			@ApiResponse(responseCode = "404", description = "Not Found (Não Encontrado) : O recurso solicitado não foi encontrado. Utilizado quando um endpoint é válido, mas o recurso específico não existe.") })
-	ResponseEntity<ApiReturn<BeneficiarioResponseDto>> patch(
+	ResponseEntity<ApiReturn<BeneficiaryResponseDto>> patch(
 			@NotNull(message = "Não pode ser nulo")
 			@PathVariable(name = "id", required = true)
 			@Parameter(
@@ -114,7 +114,7 @@ public interface BeneficiarioApi {
 			@Parameter(
 					description = "DTO para envio de requisição", 
 					required = true)
-			BeneficiarioUpdateRequestDto updateRequest);
+			BeneficiaryUpdateRequestDto updateRequest);
 
 	@DeleteMapping("/{id}")
 	@Operation(
@@ -123,7 +123,7 @@ public interface BeneficiarioApi {
 	@ApiResponses(value = { 
 			@ApiResponse(responseCode = "200", description = "OK (Sucesso): A requisição foi bem-sucedida e a resposta contém os dados esperados."),
 			@ApiResponse(responseCode = "404", description = "Not Found (Não Encontrado) : O recurso solicitado não foi encontrado. Utilizado quando um endpoint é válido, mas o recurso específico não existe.") })
-	ResponseEntity<ApiReturn<BeneficiarioResponseDto>> delete(
+	ResponseEntity<ApiReturn<BeneficiaryResponseDto>> delete(
 			@NotNull(message = "Não pode ser nulo")
 			@PathVariable(name = "id", required = true)
 			@Parameter(
@@ -138,7 +138,7 @@ public interface BeneficiarioApi {
 			description = "Recupera todos os beneficiários existentes.")
 	@ApiResponses(value = { 
 			@ApiResponse(responseCode = "200", description = "OK (Sucesso): A requisição foi bem-sucedida e a resposta contém os dados esperados.") })
-	ResponseEntity<ApiReturn<List<BeneficiarioResponseDto>>> getAll();
+	ResponseEntity<ApiReturn<List<BeneficiaryResponseDto>>> getAll();
 
 	@GetMapping("/{id}/documentos")
 	@Operation(
@@ -146,7 +146,7 @@ public interface BeneficiarioApi {
 			description = "Recupera todos os documentos de um beneficiário existente.")
 	@ApiResponses(value = { 
 			@ApiResponse(responseCode = "200", description = "OK (Sucesso): A requisição foi bem-sucedida e a resposta contém os dados esperados.") })
-	ResponseEntity<ApiReturn<List<DocumentoResponseDto>>> getDocumentosByBeneficiarioId(
+	ResponseEntity<ApiReturn<List<DocumentResponseDto>>> getDocumentosByBeneficiarioId(
 			@NotNull(message = "Não pode ser nulo")
 			@PathVariable(name = "id", required = true)
 			@Parameter(

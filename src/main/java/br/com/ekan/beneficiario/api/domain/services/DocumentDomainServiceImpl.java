@@ -1,217 +1,211 @@
 package br.com.ekan.beneficiario.api.domain.services;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import br.com.ekan.beneficiario.api.domain.exceptions.AbstractDomainException;
+import br.com.ekan.beneficiario.api.domain.exceptions.InternalServerErrorDomainException;
+import br.com.ekan.beneficiario.api.domain.exceptions.WarningDomainException;
+import br.com.ekan.beneficiario.api.domain.models.Beneficiary;
+import br.com.ekan.beneficiario.api.domain.models.Document;
+import br.com.ekan.beneficiario.api.infrastructure.database.exceptions.AbstractDatabaseException;
+import br.com.ekan.beneficiario.api.infrastructure.database.services.DocumentDatabaseService;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class DocumentoDomainServiceImpl implements DocumentoDomainService {
+public class DocumentDomainServiceImpl implements DocumentDomainService {
 
-	@Lazy @Autowired
-	private CalendarDomainServiceImpl calendarDomainService;
+	private final DocumentDatabaseService databaseService;
+	private BeneficiaryDomainServiceImpl beneficiaryDomainService;
 
-	protected final ProgramUserIntegrationResourceService<
-		ProgramUserIntegrationCreateRequestDto, 
-		ProgramUserIntegrationUpdateRequestDto,
-		ProgramUserIntegrationResponseDto,
-		ProgramUserIntegrationResourceMapper,
-		ProgramUserIntegration, 
-		DocumentoDomainService> resourceService;
-	protected final DocumentDatabaseService databaseService;
-
-	public DocumentoDomainServiceImpl(
-			@Lazy ProgramUserIntegrationResourceService<
-				ProgramUserIntegrationCreateRequestDto,
-				ProgramUserIntegrationUpdateRequestDto,
-				ProgramUserIntegrationResponseDto, 
-				ProgramUserIntegrationResourceMapper,
-				ProgramUserIntegration,
-				DocumentoDomainService> resourceService,
-			@Lazy DocumentDatabaseService databaseService) {
-		this.resourceService = resourceService;
+	public DocumentDomainServiceImpl(
+			@Lazy DocumentDatabaseService databaseService,
+			@Lazy BeneficiaryDomainServiceImpl beneficiaryDomainService) {
 		this.databaseService = databaseService;
+		this.beneficiaryDomainService = beneficiaryDomainService;
 	}
 
 	@Override
-	public ProgramUserIntegration post(final ProgramUserIntegration model) {
-		log.info("Salvando o modelo...");
+	public Document post(final Document model) {
+		log.info("Salvando o documento...");
 		log.debug("model: {}", model);
 
 		if (model.getId() == null) {
 			Object[] args = { "model.id" };
 			String message = String.format("O atributo %1s não pode ser nulo.", args);
 			log.error(message);
-			throw new InternalServerWarningDomainException(message);
+			throw new WarningDomainException(message);
 		}
 
 		try {
-			Calendar calendar = calendarDomainService.getById(model.getCalendar().getId());
-			model.setCalendar(calendar);
+			Beneficiary beneficiary = beneficiaryDomainService.getById(model.getBeneficiary().getId());
+			model.setBeneficiary(beneficiary);
 			
-			ProgramUserIntegration createdModel = databaseService.post(model);
+			Document createdModel = databaseService.post(model);
 
-			final ProgramUserIntegration finalCreatedModelForFeign = createdModel; // Cria uma cópia final do model
-
-			// TODO: implementar a chamada ao Client Feign, se cabível
-
+			// Garante que qualquer atualização feita na camada de persistência será
+			// recuperada.
 			createdModel = databaseService.getById(createdModel.getId());
 
-			log.info("Modelo salvo com sucesso!");
+			log.info("Documento salvo com sucesso!");
 			log.debug("createdModel: {}", createdModel);
 
 			return createdModel;
 		} catch (AbstractDatabaseException ex) {
 			throw ex;
-		} catch (AbstractClientException ex) {
-			throw ex;
 		} catch (AbstractDomainException ex) {
 			throw ex;
 		} catch (Exception ex) {
-			String message = "Não foi possível salvar o modelo.";
+			String message = "Não foi possível salvar o documento.";
 			log.error(message, ex);
 			throw new InternalServerErrorDomainException(message, ex);
 		}
 	}
 
 	@Override
-	public ProgramUserIntegration patch(final UUID id, final ProgramUserIntegration model) {
-		log.info("Atualizando o modelo...");
+	public Document patch(final UUID id, final Document model) {
+		log.info("Atualizando o documento...");
 		log.debug("id: {}", id);
 		log.debug("model: {}", model);
 
 		if (model.getId() == null) {
 			Object[] args = { "model.id" };
 			String message = String.format("O atributo %1s não pode ser nulo.", args);
-			log.error(message);
-			throw new InternalServerWarningDomainException(message);
+			log.warn(message);
+			throw new WarningDomainException(message);
 		}
 		if (model.getId().compareTo(id) != 0) {
 			Object[] args = { "model.id", "id", model.getId(), id };
 			String message = String.format("O atributo %1s não pode ser diferente do parâmetro %2s. %1s = %3s, %2s = %4s", args);
-			log.error(message);
-			throw new InternalServerWarningDomainException(message);
+			log.warn(message);
+			throw new WarningDomainException(message);
 		}
 
 		try {
-			ProgramUserIntegration storedModel = databaseService.getById(model.getId());
+			Document storedModel = databaseService.getById(model.getId());
 			if (model.hasUpdate()) {
-	            if (model.getInternalPlatformEnum() != null && !model.getInternalPlatformEnum().equals(storedModel.getInternalPlatformEnum())) {
-	                storedModel.setInternalPlatformEnum(model.getInternalPlatformEnum());
+	            if (model.getDocumentTypeEnum() != null && !model.getDocumentTypeEnum().equals(storedModel.getDocumentTypeEnum())) {
+	                storedModel.setDocumentTypeEnum(model.getDocumentTypeEnum());
 	            }
-	            
-	            // Verifica se o mapa não é null e depois se é diferente do mapa armazenado
-	            if (model.getProgramUserIntegrationPropertyMap() != null && !model.getProgramUserIntegrationPropertyMap().equals(storedModel.getProgramUserIntegrationPropertyMap())) {
-	                storedModel.setProgramUserIntegrationPropertyMap(new HashMap<>(model.getProgramUserIntegrationPropertyMap()));
-	            } else if (model.getProgramUserIntegrationPropertyMap() == null && storedModel.getProgramUserIntegrationPropertyMap() != null) {
-	                // Caso o mapa em model seja null e o armazenado não, atualiza para null
-	                storedModel.setProgramUserIntegrationPropertyMap(null);
+	            if (model.getDescription() != null && !model.getDescription().equals(storedModel.getDescription())) {
+	                storedModel.setDocumentTypeEnum(model.getDocumentTypeEnum());
+	            }
+	            if (!Objects.equals(model.getInsertDate(), storedModel.getInsertDate())) {
+	                storedModel.setInsertDate(model.getInsertDate());
+	            }
+	            if (!Objects.equals(model.getUpdateDate(), storedModel.getUpdateDate())) {
+	                storedModel.setUpdateDate(model.getUpdateDate());
 	            }
 
 				storedModel = databaseService.post(storedModel);
 			}
 
-			final ProgramUserIntegration finalCreatedModelForFeign = storedModel; // Cria uma cópia final do model
-
-			// TODO: implementar a chamada ao Client Feign, se cabível
-
+			// Garante que qualquer atualização feita na camada de persistência será
+			// recuperada.
 			storedModel = databaseService.getById(model.getId());
 
-			log.info("Modelo atualizado com sucesso!");
+			log.info("Documento atualizado com sucesso!");
 			log.debug("storedModel: {}", storedModel);
 
 			return storedModel;
 		} catch (AbstractDatabaseException ex) {
 			throw ex;
-		} catch (AbstractClientException ex) {
-			throw ex;
 		} catch (AbstractDomainException ex) {
 			throw ex;
 		} catch (Exception ex) {
-			String message = "Não foi possível atualizar o modelo.";
+			String message = "Não foi possível atualizar o documento.";
 			log.error(message, ex);
 			throw new InternalServerErrorDomainException(message, ex);
 		}
 	}
 
 	@Override
-	public ProgramUserIntegration delete(final UUID id) {
-		log.info("Excluindo o modelo... ID = {}", id);
+	public Document delete(final UUID id) {
+		log.info("Excluindo o documento... ID = {}", id);
 
 		try {
-			ProgramUserIntegration model = databaseService.delete(id);
+			Document model = databaseService.delete(id);
 
-			// TODO: implementar a chamada ao Client Feign, se cabível
-
-			log.info("Modelo excluído com sucesso!");
+			log.info("Documento excluído com sucesso!");
 			log.debug("model: {}", model);
 
 			return model;
 		} catch (AbstractDatabaseException ex) {
 			throw ex;
-		} catch (AbstractClientException ex) {
-			throw ex;
 		} catch (AbstractDomainException ex) {
 			throw ex;
 		} catch (Exception ex) {
-			String message = "Não foi possível excluir o modelo.";
+			String message = "Não foi possível excluir o documento.";
 			log.error(message, ex);
 			throw new InternalServerErrorDomainException(message, ex);
 		}
 	}
 
 	@Override
-	public ProgramUserIntegration getById(final UUID id) {
-		log.info("Recuperando o modelo... ID = {}", id);
+	public Document getById(final UUID id) {
+		log.info("Recuperando o documento... ID = {}", id);
 
 		try {
-			ProgramUserIntegration model = databaseService.getById(id);
+			Document model = databaseService.getById(id);
 
-			// TODO: implementar a chamada ao Client Feign, se cabível
-
-			log.info("Modelo recuperado com sucesso!");
+			log.info("Documento recuperado com sucesso!");
 			log.debug("model: {}", model);
 
 			return model;
 		} catch (AbstractDatabaseException ex) {
 			throw ex;
-		} catch (AbstractClientException ex) {
-			throw ex;
 		} catch (AbstractDomainException ex) {
 			throw ex;
 		} catch (Exception ex) {
-			String message = "Não foi possível recuperar o modelo.";
+			String message = "Não foi possível recuperar o documento.";
 			log.error(message, ex);
 			throw new InternalServerErrorDomainException(message, ex);
 		}
 	}
 
 	@Override
-	public List<ProgramUserIntegration> getAll() {
-		log.info("Recuperando todos os modelos...");
+	public List<Document> getAll() {
+		log.info("Recuperando todos os documentos...");
 
 		try {
-			List<ProgramUserIntegration> modelList = databaseService.getAll();
+			List<Document> modelList = databaseService.getAll();
 
-			// TODO: implementar a chamada ao Client Feign, se cabível
-
-			log.info("Modelos recuperados com sucesso! Quantidade: {}", modelList.size());
+			log.info("Documentos recuperados com sucesso! Quantidade: {}", modelList.size());
 
 			return modelList;
 		} catch (AbstractDatabaseException ex) {
 			throw ex;
-		} catch (AbstractClientException ex) {
+		} catch (AbstractDomainException ex) {
+			throw ex;
+		} catch (Exception ex) {
+			String message = "Não foi possível recuperar os documentos.";
+			log.error(message, ex);
+			throw new InternalServerErrorDomainException(message, ex);
+		}
+	}
+
+	@Override
+	public List<Document> getByBeneficiary(final UUID beneficiaryId) {
+		log.info("Recuperando os documentos do beneficiário informado...");
+		log.debug("beneficiaryId: {}", beneficiaryId);
+
+		try {
+			List<Document> modelList = databaseService.getByBeneficiary(beneficiaryId);
+
+			log.info("Documentos recuperados com sucesso! Quantidade: {}", modelList.size());
+
+			return modelList;
+		} catch (AbstractDatabaseException ex) {
 			throw ex;
 		} catch (AbstractDomainException ex) {
 			throw ex;
 		} catch (Exception ex) {
-			String message = "Não foi possível recuperar os modelos.";
+			String message = "Não foi possível recuperar os documentos.";
 			log.error(message, ex);
 			throw new InternalServerErrorDomainException(message, ex);
 		}
@@ -221,24 +215,20 @@ public class DocumentoDomainServiceImpl implements DocumentoDomainService {
 
 	@Override
 	public long count() {
-		log.info("Contanto os modelos...");
+		log.info("Contanto os documentos...");
 
 		try {
 			long count = databaseService.count();
 
-			// TODO: implementar a chamada ao Client Feign, se cabível
-
-			log.info("Modelos contados com secusso! Quantidade: {}", count);
+			log.info("Documentos contados com secusso! Quantidade: {}", count);
 
 			return count;
 		} catch (AbstractDatabaseException ex) {
 			throw ex;
-		} catch (AbstractClientException ex) {
-			throw ex;
 		} catch (AbstractDomainException ex) {
 			throw ex;
 		} catch (Exception ex) {
-			String message = "Não foi possível contar os modelos.";
+			String message = "Não foi possível contar os documentos.";
 			log.error(message, ex);
 			throw new InternalServerErrorDomainException(message, ex);
 		}

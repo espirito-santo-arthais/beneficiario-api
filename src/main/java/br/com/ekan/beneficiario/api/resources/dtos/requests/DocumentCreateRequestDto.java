@@ -16,7 +16,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class DocumentoCreateRequestDto extends AbstractCreateRequestDto {
+public class DocumentCreateRequestDto extends AbstractCreateRequestDto {
 
 	@NotNull(message = "Não pode ser nulo")
 	private DocumentTypeEnum documentTypeEnum;
@@ -25,6 +25,6 @@ public class DocumentoCreateRequestDto extends AbstractCreateRequestDto {
 	@Size(	min = 1,
 			max = 100,
 			message = "Deve ter entre 1 e 100 caracteres")
-	private String descricao;
+	private String description;
 
 }

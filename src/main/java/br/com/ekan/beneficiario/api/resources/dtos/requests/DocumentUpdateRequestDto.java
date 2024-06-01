@@ -18,7 +18,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class DocumentoUpdateRequestDto extends AbstractUpdateRequestDto {
+public class DocumentUpdateRequestDto extends AbstractUpdateRequestDto {
 
 	@Nullable
 	@EqualsAndHashCode.Include
@@ -28,11 +28,11 @@ public class DocumentoUpdateRequestDto extends AbstractUpdateRequestDto {
 	@Size(	min = 1,
 			max = 100,
 			message = "Deve ter entre 1 e 100 caracteres")
-	private String descricao;
+	private String description;
 
 	public boolean hasUpdate() {
 		return this.documentTypeEnum != null
-				|| this.descricao != null;
+				|| this.description != null;
 	}
 
 }

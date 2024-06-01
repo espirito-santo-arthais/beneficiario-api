@@ -20,7 +20,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class BeneficiarioUpdateRequestDto extends AbstractUpdateRequestDto {
+public class BeneficiaryUpdateRequestDto extends AbstractUpdateRequestDto {
 
 	@Nullable
 	@Size(	min = 1,

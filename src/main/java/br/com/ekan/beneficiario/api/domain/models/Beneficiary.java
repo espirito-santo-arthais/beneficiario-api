@@ -41,9 +41,13 @@ public class Beneficiary extends AbstractModel {
 		Document> documentList;
 
     public boolean hasUpdate() {
+    	// A lista de documentos nunca é alterada na mesma operação que o beneficiário
+    	// é alterado. Cada documento deve ser alterado em uma operação separada.
         return this.name != null
                 || this.phoneNumber != null
-        		|| this.birthDate != null;
+        		|| this.birthDate != null 
+        		|| this.insertDate != null 
+        		|| this.updateDate != null;
     }
 
 }

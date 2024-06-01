@@ -22,7 +22,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class BeneficiarioCreateRequestDto extends AbstractCreateRequestDto {
+public class BeneficiaryCreateRequestDto extends AbstractCreateRequestDto {
 
 	@NotNull(message = "Não pode ser nulo")
 	@Size(	min = 1,
@@ -39,10 +39,10 @@ public class BeneficiarioCreateRequestDto extends AbstractCreateRequestDto {
 	private LocalDate birthDate;
 
 	@Nullable
-	@Singular("documento")
-	//@ToString.Exclude
+	@Singular("document")
+	@ToString.Exclude
 	private List<
 		@NotNull(message = "Não pode ser nulo") 
-		DocumentoCreateRequestDto> documentoList;
+		DocumentCreateRequestDto> documentoList;
 
 }

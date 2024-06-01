@@ -11,6 +11,6 @@ import br.com.ekan.beneficiario.api.infrastructure.database.entities.DocumentEnt
 @Repository
 public interface DocumentRepository extends CrudRepository<DocumentEntity, String> {
 
-	List<Beneficiary> findByBeneficiary(Beneficiary beneficiary);
+	List<DocumentEntity> findByBeneficiary(Beneficiary beneficiary);
 
 }

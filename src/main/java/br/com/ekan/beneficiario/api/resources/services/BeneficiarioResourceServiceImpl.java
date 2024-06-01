@@ -4,10 +4,11 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import br.com.ekan.beneficiario.api.domain.models.Beneficiary;
+import br.com.ekan.beneficiario.api.domain.services.BeneficiaryDomainService;
 import br.com.ekan.beneficiario.api.domain.services.DomainService;
-import br.com.ekan.beneficiario.api.resources.dtos.requests.BeneficiarioCreateRequestDto;
-import br.com.ekan.beneficiario.api.resources.dtos.requests.BeneficiarioUpdateRequestDto;
-import br.com.ekan.beneficiario.api.resources.dtos.responses.BeneficiarioResponseDto;
+import br.com.ekan.beneficiario.api.resources.dtos.requests.BeneficiaryCreateRequestDto;
+import br.com.ekan.beneficiario.api.resources.dtos.requests.BeneficiaryUpdateRequestDto;
+import br.com.ekan.beneficiario.api.resources.dtos.responses.BeneficiaryResponseDto;
 import br.com.ekan.beneficiario.api.resources.mappers.ResourceMapper;
 import lombok.extern.slf4j.Slf4j;
 
@@ -15,33 +16,33 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class BeneficiarioResourceServiceImpl
 		extends ResourceServiceImpl<
-			BeneficiarioCreateRequestDto, 
-			BeneficiarioUpdateRequestDto, 
-			BeneficiarioResponseDto, 
+			BeneficiaryCreateRequestDto, 
+			BeneficiaryUpdateRequestDto, 
+			BeneficiaryResponseDto, 
 			ResourceMapper<
-				BeneficiarioCreateRequestDto, 
-				BeneficiarioUpdateRequestDto, 
-				BeneficiarioResponseDto, 
+				BeneficiaryCreateRequestDto, 
+				BeneficiaryUpdateRequestDto, 
+				BeneficiaryResponseDto, 
 				Beneficiary>, 
 			Beneficiary, 
-			BeneficiarioDomainService>
+			BeneficiaryDomainService>
 		implements BeneficiarioResourceService<
-			BeneficiarioCreateRequestDto, 
-			BeneficiarioUpdateRequestDto, 
-			BeneficiarioResponseDto, 
+			BeneficiaryCreateRequestDto, 
+			BeneficiaryUpdateRequestDto, 
+			BeneficiaryResponseDto, 
 			ResourceMapper<
-				BeneficiarioCreateRequestDto, 
-				BeneficiarioUpdateRequestDto, 
-				BeneficiarioResponseDto, 
+				BeneficiaryCreateRequestDto, 
+				BeneficiaryUpdateRequestDto, 
+				BeneficiaryResponseDto, 
 				Beneficiary>, 
 			Beneficiary, 
-			BeneficiarioDomainService> {
+			BeneficiaryDomainService> {
 
-	protected final ResourceMapper<BeneficiarioCreateRequestDto, BeneficiarioUpdateRequestDto, BeneficiarioResponseDto, Beneficiary> mapper;
+	protected final ResourceMapper<BeneficiaryCreateRequestDto, BeneficiaryUpdateRequestDto, BeneficiaryResponseDto, Beneficiary> mapper;
 	protected final DomainService<Beneficiary> domainService;
 
 	public BeneficiarioResourceServiceImpl(
-			@Lazy ResourceMapper<BeneficiarioCreateRequestDto, BeneficiarioUpdateRequestDto, BeneficiarioResponseDto, Beneficiary> mapper, 
+			@Lazy ResourceMapper<BeneficiaryCreateRequestDto, BeneficiaryUpdateRequestDto, BeneficiaryResponseDto, Beneficiary> mapper, 
 			@Lazy DomainService<Beneficiary> domainService) {
 		super(mapper, domainService);
 		this.mapper = mapper;

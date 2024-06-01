@@ -28,9 +28,11 @@ public class Document extends AbstractModel {
 	private String description;
 
 	public boolean hasUpdate() {
-		// O beneficiário nunca é alterado em um documento.
+		// O beneficiário de um documento nunca é alterado.
 		return this.documentTypeEnum != null 
-				|| this.description != null;
+				|| this.description != null 
+				|| this.insertDate != null 
+				|| this.updateDate != null;
 	}
 
 }
