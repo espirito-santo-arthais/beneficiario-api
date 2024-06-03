@@ -21,16 +21,14 @@ public class Beneficiary extends AbstractModel {
 
     @Nullable
     @Size(min = 1, max = 100, message = "Deve ter entre 1 e 30 caracteres")
-	@EqualsAndHashCode.Include
     private String name;
 
     @Nullable
     @Pattern(regexp = "^\\+?[1-9]\\d{1,14}$", message = "Formato de telefone inválido")
-	@EqualsAndHashCode.Include
     private String phoneNumber;
 
+    @Nullable
 	@NotNull(message = "Não pode ser nulo")
-	@EqualsAndHashCode.Include
 	private LocalDate birthDate;
 	
 	@Nullable

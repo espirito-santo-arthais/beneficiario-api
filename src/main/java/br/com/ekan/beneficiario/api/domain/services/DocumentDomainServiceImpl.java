@@ -1,7 +1,6 @@
 package br.com.ekan.beneficiario.api.domain.services;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 import org.springframework.context.annotation.Lazy;
@@ -81,7 +80,7 @@ public class DocumentDomainServiceImpl implements DocumentDomainService {
 		}
 		if (model.getId().compareTo(id) != 0) {
 			Object[] args = { "model.id", "id", model.getId(), id };
-			String message = String.format("O atributo %1s não pode ser diferente do parâmetro %2s. %1s = %3s, %2s = %4s", args);
+			String message = String.format("O atributo %1$s não pode ser diferente do parâmetro %2$s. %1$s = %3$s, %2$s = %4$s", args);
 			log.warn(message);
 			throw new WarningDomainException(message);
 		}
@@ -95,10 +94,10 @@ public class DocumentDomainServiceImpl implements DocumentDomainService {
 	            if (model.getDescription() != null && !model.getDescription().equals(storedModel.getDescription())) {
 	                storedModel.setDocumentTypeEnum(model.getDocumentTypeEnum());
 	            }
-	            if (!Objects.equals(model.getInsertDate(), storedModel.getInsertDate())) {
+	            if (model.getInsertDate() != null && !model.getInsertDate().equals(storedModel.getInsertDate())) {
 	                storedModel.setInsertDate(model.getInsertDate());
 	            }
-	            if (!Objects.equals(model.getUpdateDate(), storedModel.getUpdateDate())) {
+	            if (model.getUpdateDate() != null && !model.getUpdateDate().equals(storedModel.getUpdateDate())) {
 	                storedModel.setUpdateDate(model.getUpdateDate());
 	            }
 

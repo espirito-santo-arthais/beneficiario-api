@@ -10,6 +10,7 @@ import jakarta.persistence.ForeignKey;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -23,7 +24,10 @@ import lombok.experimental.SuperBuilder;
  * Entidade que representa um registro na tabela de documentos.
  */
 @Entity
-@Table(name = "Documento")
+@Table(name = "document", uniqueConstraints = {
+		@UniqueConstraint(
+				columnNames = {"beneficiary_id", "documentType"},
+				name = "document_UK_001")})
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -35,7 +39,8 @@ public class DocumentEntity extends AbstractEntity {
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(
 			name = "beneficiario_id",
-			foreignKey = @ForeignKey(name = "documents_fk_001"))
+			foreignKey = @ForeignKey(name = "documents_fk_001"),
+			nullable = false)
 	@NotNull(message = "Não pode ser nulo")
 	@EqualsAndHashCode.Include
 	private BeneficiaryEntity beneficiary;

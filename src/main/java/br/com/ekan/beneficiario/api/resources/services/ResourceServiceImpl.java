@@ -12,6 +12,7 @@ import br.com.ekan.beneficiario.api.domain.exceptions.AbstractDomainException;
 import br.com.ekan.beneficiario.api.domain.exceptions.InternalServerErrorDomainException;
 import br.com.ekan.beneficiario.api.domain.models.AbstractModel;
 import br.com.ekan.beneficiario.api.domain.services.DomainService;
+import br.com.ekan.beneficiario.api.infrastructure.database.exceptions.AbstractDatabaseException;
 import br.com.ekan.beneficiario.api.infrastructure.database.exceptions.InternalServerErrorDatabaseException;
 import br.com.ekan.beneficiario.api.infrastructure.database.exceptions.NotFoundDatabaseException;
 import br.com.ekan.beneficiario.api.resources.dtos.requests.AbstractCreateRequestDto;
@@ -23,15 +24,9 @@ import br.com.ekan.beneficiario.api.resources.exceptions.WarningResourceExceptio
 import br.com.ekan.beneficiario.api.resources.mappers.ResourceMapper;
 import br.com.ekan.beneficiario.api.resources.structures.ApiReturn;
 import br.com.ekan.beneficiario.api.resources.structures.Message;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * 
- * @param <P> AbstractResponseDto
- * @param <PP> ResourceMapper<CQ, UQ, P, M>
- * @param <M> AbstractModel
- * @param <D> DomainService<M>
- */
 @Slf4j
 public abstract class ResourceServiceImpl<
 		CQ extends AbstractCreateRequestDto, 
@@ -49,16 +44,20 @@ public abstract class ResourceServiceImpl<
 			ResourceMapper<CQ, UQ, P, M> mapper, 
 			DomainService<M> domainService) {
 		super();
+		log.info("Inicializando o serviço...");
 		this.mapper = mapper;
 		this.domainService = domainService;
 	}
 
+	@PostConstruct
+	public void postConstruct() {
+		log.info("Serviço inicializado com sucesso!...");
+	}
+	
 	public ApiReturn<P> post(CQ request) {
 		log.info("Salvando o recurso...");
 		log.debug("request: {}", request);
 
-		// TODO: Colocar validação negocial dos dados de entrada.
-		
 		try {
 			M model = mapper.toCreationModel(request);
 
@@ -73,7 +72,7 @@ public abstract class ResourceServiceImpl<
 			log.debug("apiReturn: {}", apiReturn);
 					
 			return apiReturn;
-		} catch (AbstractDomainException ex) {
+		} catch (AbstractDatabaseException | AbstractDomainException ex) {
 			ApiReturn<P> apiReturn = getApiReturnForException(null, ex);
 			return apiReturn;
 		} catch (Exception ex) {
@@ -98,7 +97,7 @@ public abstract class ResourceServiceImpl<
 		}
 		if (request.getId().compareTo(id) != 0) {
 			Object[] args = { "request.id", "id", request.getId(), id };
-			String message = String.format("O atributo %1s não pode ser diferente do parâmetro %2s. %1s = %3s, %2s = %4s", args);
+			String message = String.format("O atributo %1$s não pode ser diferente do parâmetro %2$s. %1$s = %3$s, %2$s = %4$s", args);
 			log.error(message);
 			ApiReturn<P> apiReturn = getApiReturnForException(null, new WarningResourceException(message));
 			return apiReturn;
@@ -118,7 +117,7 @@ public abstract class ResourceServiceImpl<
 			log.debug("apiReturn: {}", apiReturn);
 					
 			return apiReturn;
-		} catch (AbstractDomainException ex) {
+		} catch (AbstractDatabaseException | AbstractDomainException ex) {
 			ApiReturn<P> apiReturn = getApiReturnForException(null, ex);
 			return apiReturn;
 		} catch (Exception ex) {
@@ -144,7 +143,7 @@ public abstract class ResourceServiceImpl<
 			log.debug("apiReturn: {}", apiReturn);
 					
 			return apiReturn;
-		} catch (AbstractDomainException ex) {
+		} catch (AbstractDatabaseException | AbstractDomainException ex) {
 			ApiReturn<P> apiReturn = getApiReturnForException(null, ex);
 			return apiReturn;
 		} catch (Exception ex) {
@@ -170,7 +169,7 @@ public abstract class ResourceServiceImpl<
 			log.debug("apiReturn: {}", apiReturn);
 					
 			return apiReturn;
-		} catch (AbstractDomainException ex) {
+		} catch (AbstractDatabaseException | AbstractDomainException ex) {
 			ApiReturn<P> apiReturn = getApiReturnForException(null, ex);
 			return apiReturn;
 		} catch (Exception ex) {
@@ -195,7 +194,7 @@ public abstract class ResourceServiceImpl<
 			log.info(message);
 
 			return apiReturn;
-		} catch (AbstractDomainException ex) {
+		} catch (AbstractDatabaseException | AbstractDomainException ex) {
 			ApiReturn<List<P>> apiReturn = getApiReturnForException(null, ex);
 			return apiReturn;
 		} catch (Exception ex) {

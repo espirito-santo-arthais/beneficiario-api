@@ -5,7 +5,6 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import br.com.ekan.beneficiario.api.domain.models.Beneficiary;
@@ -18,12 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class BeneficiaryDatabaseMapper implements DatabaseMapper<Beneficiary, BeneficiaryEntity> {
 	
-	private final DocumentDatabaseMapper documentDatabaseMapper;
-	
-	public BeneficiaryDatabaseMapper(@Lazy DocumentDatabaseMapper documentDatabaseMapper) {
-		this.documentDatabaseMapper = documentDatabaseMapper;
-	}
-
 	@Override
 	public BeneficiaryEntity toEntity(Beneficiary model) {
 	    log.info("Mapeando modelo {} para entidade {}...", Beneficiary.class.getSimpleName(), BeneficiaryEntity.class.getSimpleName());
@@ -39,7 +32,6 @@ public class BeneficiaryDatabaseMapper implements DatabaseMapper<Beneficiary, Be
 	                            .birthDate(modelTemp.getBirthDate())
 	                            .insertDate(modelTemp.getInsertDate())
 	                            .updateDate(modelTemp.getUpdateDate())
-	                            .documentList(documentDatabaseMapper.toEntityList(modelTemp.getDocumentList()))
 	                    	    .build();
 	                    log.info("Modelo mapeado para entity com sucesso!");
 	                    log.debug("entity: {}", entity);
@@ -71,7 +63,6 @@ public class BeneficiaryDatabaseMapper implements DatabaseMapper<Beneficiary, Be
 	                            .birthDate(entityTemp.getBirthDate())
 	                            .insertDate(entityTemp.getInsertDate())
 	                            .updateDate(entityTemp.getUpdateDate())
-	                            .documentList(documentDatabaseMapper.toModelList(entityTemp.getDocumentList()))
 	                            .build();
 	                    log.info("Entidade mapeada para modelo com sucesso!");
 	                    log.debug("model: ", model);

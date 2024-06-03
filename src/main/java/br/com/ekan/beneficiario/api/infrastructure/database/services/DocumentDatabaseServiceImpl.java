@@ -5,8 +5,9 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
-import br.com.ekan.beneficiario.api.domain.models.Beneficiary;
+import br.com.ekan.beneficiario.api.domain.enums.DocumentTypeEnum;
 import br.com.ekan.beneficiario.api.domain.models.Document;
+import br.com.ekan.beneficiario.api.infrastructure.database.entities.BeneficiaryEntity;
 import br.com.ekan.beneficiario.api.infrastructure.database.entities.DocumentEntity;
 import br.com.ekan.beneficiario.api.infrastructure.database.exceptions.InternalServerErrorDatabaseException;
 import br.com.ekan.beneficiario.api.infrastructure.database.exceptions.NotFoundDatabaseException;
@@ -27,16 +28,40 @@ public class DocumentDatabaseServiceImpl
 			DocumentRepository repository, 
 			DocumentDatabaseMapper mapper) {
 		super(repository, mapper);
+        log.info("Continuando a inicialização do serviço...");
 		this.repository = repository;
 		this.mapper = mapper;
 	}
 
 	@Override
-	public List<Document> getByBeneficiary(UUID beneficiaryId) {
-		log.info("Recuperando os documentos do beneficiario informado...");
+	public boolean existsByBeneficiaryAndDocumentType(UUID beneficiaryId, DocumentTypeEnum documentTypeEnum) {
+		log.info("Verificando a existência do documento...");
+		log.debug("beneficiaryId: {}", beneficiaryId);
+		log.debug("documentTypeEnum: {}", documentTypeEnum);
 
 		try {
-			Beneficiary beneficiary = Beneficiary.builder().id(beneficiaryId).build();
+			BeneficiaryEntity beneficiary = BeneficiaryEntity.builder().id(beneficiaryId.toString()).build();
+
+			boolean exists = repository.existsByBeneficiaryAndDocumentType(beneficiary, documentTypeEnum);
+
+			log.info("Verificação realizada com sucesso!");
+			log.debug("exists: {}", exists);
+
+			return exists;
+		} catch (Exception ex) {
+			String message = "Não foi possível recuperar o documento.";
+			log.error(message, ex);
+			throw new InternalServerErrorDatabaseException(message, ex);
+		}
+	}
+
+	@Override
+	public List<Document> getByBeneficiary(UUID beneficiaryId) {
+		log.info("Recuperando os documentos do beneficiario informado...");
+		log.debug("beneficiaryId: {}", beneficiaryId);
+
+		try {
+			BeneficiaryEntity beneficiary = BeneficiaryEntity.builder().id(beneficiaryId.toString()).build();
 			
 			List<DocumentEntity> entityList = repository.findByBeneficiary(beneficiary);
 			if (entityList.isEmpty()) {

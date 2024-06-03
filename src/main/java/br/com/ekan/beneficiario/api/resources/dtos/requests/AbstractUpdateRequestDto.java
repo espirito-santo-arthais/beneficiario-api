@@ -21,6 +21,7 @@ import lombok.experimental.SuperBuilder;
 public abstract class AbstractUpdateRequestDto extends AbstractRequestDto {
 
 	@NotNull(message = "Não pode ser nulo")
+	@EqualsAndHashCode.Include
 	protected UUID id;
 
 }

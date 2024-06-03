@@ -1,12 +1,9 @@
 package br.com.ekan.beneficiario.api.infrastructure.database.entities;
 
 import java.time.LocalDate;
-import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -15,7 +12,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.Singular;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
@@ -48,13 +44,5 @@ public class BeneficiaryEntity extends AbstractEntity {
 	@NotNull(message = "Não pode ser nulo")
 	@EqualsAndHashCode.Include
 	private LocalDate birthDate;
-
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "beneficiary", orphanRemoval = true)
-	@NotNull(message = "Não pode ser nulo")
-	@Singular("document")
-	@ToString.Exclude
-	private List<
-		@NotNull(message = "Não pode ser nulo") 
-		DocumentEntity> documentList;
 
 }

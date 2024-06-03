@@ -14,6 +14,7 @@ import br.com.ekan.beneficiario.api.infrastructure.database.exceptions.InternalS
 import br.com.ekan.beneficiario.api.infrastructure.database.exceptions.NotFoundDatabaseException;
 import br.com.ekan.beneficiario.api.infrastructure.database.exceptions.WarningDatabaseException;
 import br.com.ekan.beneficiario.api.infrastructure.database.mappers.DatabaseMapper;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -23,9 +24,14 @@ public abstract class DatabaseServiceImpl<M extends AbstractModel, E extends Abs
 	protected final DatabaseMapper<M, E> mapper;
 
 	public DatabaseServiceImpl(CrudRepository<E, String> repository, DatabaseMapper<M, E> mapper) {
-		super();
+		log.info("Inicializando o serviço...");
 		this.repository = repository;
 		this.mapper = mapper;
+	}
+
+	@PostConstruct
+	public void postConstruct() {
+		log.info("Serviço inicializado com sucesso!...");
 	}
 
 	@Override
@@ -72,7 +78,7 @@ public abstract class DatabaseServiceImpl<M extends AbstractModel, E extends Abs
 		}
 		if (model.getId().compareTo(id) != 0) {
 			Object[] args = { "model.id", "id", model.getId(), id };
-			String message = String.format("O atributo %1s não pode ser diferente do parâmetro %2s. %1s = %3s, %2s = %4s", args);
+			String message = String.format("O atributo %1$s não pode ser diferente do parâmetro %2$s. %1$s = %3$s, %2$s = %4$s", args);
 			log.warn(message);
 			throw new WarningDatabaseException(message);
 		}

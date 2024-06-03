@@ -1,7 +1,6 @@
 package br.com.ekan.beneficiario.api.domain.models;
 
 import java.time.LocalDate;
-import java.util.Objects;
 import java.util.UUID;
 
 import jakarta.validation.constraints.NotNull;
@@ -26,22 +25,5 @@ public abstract class AbstractModel {
 
 	@NotNull(message = "Não pode ser nulo")
 	protected LocalDate updateDate;
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (obj == null || getClass() != obj.getClass())
-			return false;
-		AbstractModel other = (AbstractModel) obj;
-		return Objects.equals(id, other.id);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(id);
-	}
 
 }

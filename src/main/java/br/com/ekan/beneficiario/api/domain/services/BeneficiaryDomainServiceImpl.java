@@ -1,8 +1,8 @@
 package br.com.ekan.beneficiario.api.domain.services;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -11,8 +11,11 @@ import br.com.ekan.beneficiario.api.domain.exceptions.AbstractDomainException;
 import br.com.ekan.beneficiario.api.domain.exceptions.InternalServerErrorDomainException;
 import br.com.ekan.beneficiario.api.domain.exceptions.WarningDomainException;
 import br.com.ekan.beneficiario.api.domain.models.Beneficiary;
+import br.com.ekan.beneficiario.api.domain.models.Document;
 import br.com.ekan.beneficiario.api.infrastructure.database.exceptions.AbstractDatabaseException;
 import br.com.ekan.beneficiario.api.infrastructure.database.services.BeneficiaryDatabaseService;
+import br.com.ekan.beneficiario.api.infrastructure.database.services.DocumentDatabaseService;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -20,11 +23,16 @@ import lombok.extern.slf4j.Slf4j;
 public class BeneficiaryDomainServiceImpl implements BeneficiaryDomainService {
 
 	private final BeneficiaryDatabaseService databaseService;
+	private final DocumentDatabaseService documentDatabaseService;
 
-	public BeneficiaryDomainServiceImpl(@Lazy BeneficiaryDatabaseService databaseService) {
+	public BeneficiaryDomainServiceImpl(
+			@Lazy BeneficiaryDatabaseService databaseService,
+			@Lazy DocumentDatabaseService documentDatabaseService) {
 		this.databaseService = databaseService;
+		this.documentDatabaseService = documentDatabaseService;
 	}
 
+	@Transactional
 	@Override
 	public Beneficiary post(final Beneficiary model) {
 		log.info("Salvando o beneficiário...");
@@ -38,11 +46,39 @@ public class BeneficiaryDomainServiceImpl implements BeneficiaryDomainService {
 		}
 
 		try {
+			// Extrai a lista de documentos
+			List<Document> documentList = model.getDocumentList();
+			
+			// Desassocia a lista de documentos do modelo inicial
+			model.setDocumentList(null);
+			
+			// Salva o beneficiário sem os documentos
 			Beneficiary createdModel = databaseService.post(model);
 
+	        // Verifica duplicação de documentType para o beneficiário
+	        for (Document document : documentList) {
+	        	boolean exists = documentDatabaseService.existsByBeneficiaryAndDocumentType(createdModel.getId(), document.getDocumentTypeEnum());
+	        	if (exists) {
+	        		String message = String.format("Documento do tipo %s já existe para o beneficiário.", document.getDocumentTypeEnum());
+	                log.warn(message);
+	                throw new WarningDomainException(message);
+	        	}
+	        }
+
+			// Associa os documentos ao beneficiário criado e salva cada documento.
+	        // Depois atualiza a lista de documentos com os documentos salvos.
+			final Beneficiary createdModelTemp = createdModel;
+	        List<Document> savedDocuments = documentList.stream().map(document -> {
+	            document.setBeneficiary(createdModelTemp);
+	            return documentDatabaseService.post(document);
+	        }).collect(Collectors.toList());
+			
 			// Garante que qualquer atualização feita na camada de persistência será
 			// recuperada.
 			createdModel = databaseService.getById(createdModel.getId());
+	        
+	        // Atualiza o beneficiário com a lista de documentos salvos
+	        createdModel.setDocumentList(savedDocuments);
 
 			log.info("Beneficiário salvo com sucesso!");
 			log.debug("storedModel: {}", createdModel);
@@ -59,6 +95,7 @@ public class BeneficiaryDomainServiceImpl implements BeneficiaryDomainService {
 		}
 	}
 
+	@Transactional
 	@Override
 	public Beneficiary patch(final UUID id, final Beneficiary model) {
 		log.info("Atualizando o beneficiário...");
@@ -73,7 +110,7 @@ public class BeneficiaryDomainServiceImpl implements BeneficiaryDomainService {
 		}
 		if (model.getId().compareTo(id) != 0) {
 			Object[] args = { "model.id", "id", model.getId(), id };
-			String message = String.format("O atributo %1s não pode ser diferente do parâmetro %2s. %1s = %3s, %2s = %4s", args);
+			String message = String.format("O atributo %1$s não pode ser diferente do parâmetro %2$s. %1$s = %3$s, %2$s = %4$s", args);
 			log.warn(message);
 			throw new WarningDomainException(message);
 		}
@@ -81,19 +118,19 @@ public class BeneficiaryDomainServiceImpl implements BeneficiaryDomainService {
 		try {
 			Beneficiary storedModel = databaseService.getById(model.getId());
 			if (model.hasUpdate()) {
-	            if (!Objects.equals(model.getName(), storedModel.getName())) {
+	            if (model.getName() != null && !model.getName().equals(storedModel.getName())) {
 	                storedModel.setName(model.getName());
 	            }
-	            if (!Objects.equals(model.getPhoneNumber(), storedModel.getPhoneNumber())) {
+	            if (model.getPhoneNumber() != null && !model.getPhoneNumber().equals(storedModel.getPhoneNumber())) {
 	                storedModel.setPhoneNumber(model.getPhoneNumber());
 	            }
-	            if (!Objects.equals(model.getBirthDate(), storedModel.getBirthDate())) {
+	            if (model.getBirthDate() != null && !model.getBirthDate().equals(storedModel.getBirthDate())) {
 	                storedModel.setBirthDate(model.getBirthDate());
 	            }
-	            if (!Objects.equals(model.getInsertDate(), storedModel.getInsertDate())) {
+	            if (model.getInsertDate() != null && !model.getInsertDate().equals(storedModel.getInsertDate())) {
 	                storedModel.setInsertDate(model.getInsertDate());
 	            }
-	            if (!Objects.equals(model.getUpdateDate(), storedModel.getUpdateDate())) {
+	            if (model.getUpdateDate() != null && !model.getUpdateDate().equals(storedModel.getUpdateDate())) {
 	                storedModel.setUpdateDate(model.getUpdateDate());
 	            }
 
@@ -119,11 +156,16 @@ public class BeneficiaryDomainServiceImpl implements BeneficiaryDomainService {
 		}
 	}
 
+	@Transactional
 	@Override
 	public Beneficiary delete(final UUID id) {
 		log.info("Excluindo o beneficiário... ID = {}", id);
 
 		try {
+			List<Document> documentList = this.documentDatabaseService.getByBeneficiary(id);
+			documentList.forEach(document -> {
+				documentDatabaseService.delete(document.getId());
+			});
 			Beneficiary model = databaseService.delete(id);
 
 			log.info("Beneficiário excluído com sucesso!");
@@ -169,7 +211,14 @@ public class BeneficiaryDomainServiceImpl implements BeneficiaryDomainService {
 
 		try {
 			List<Beneficiary> modelList = databaseService.getAll();
-
+			modelList.forEach(modelTemp -> {
+				List<Document> documentList = documentDatabaseService.getByBeneficiary(modelTemp.getId());
+				documentList.forEach(documentTemp -> {
+					documentTemp.setBeneficiary(null);
+				});
+				modelTemp.setDocumentList(documentList);
+			});
+			
 			log.info("Beneficiário recuperados com sucesso! Quantidade: {}", modelList.size());
 
 			return modelList;

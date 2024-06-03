@@ -1,5 +1,8 @@
 package br.com.ekan.beneficiario.api.domain.enums;
 
+/**
+ * Tipifica os tipos de documentos dos beneficiários.
+ */
 public enum DocumentTypeEnum {
 	CPF("CPF", "CPF do beneficiário"),
 	RG("RG", "Registro geral (carteira de identidade) do beneficiário");

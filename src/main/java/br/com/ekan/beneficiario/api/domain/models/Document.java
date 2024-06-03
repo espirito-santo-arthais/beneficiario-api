@@ -14,11 +14,9 @@ import lombok.experimental.SuperBuilder;
 public class Document extends AbstractModel {
 
 	@Nullable
-	@EqualsAndHashCode.Include
 	private Beneficiary beneficiary;
 
 	@Nullable
-	@EqualsAndHashCode.Include
 	private DocumentTypeEnum documentTypeEnum;
 
 	@Nullable

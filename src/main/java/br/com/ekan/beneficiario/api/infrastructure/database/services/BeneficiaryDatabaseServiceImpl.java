@@ -21,6 +21,7 @@ public class BeneficiaryDatabaseServiceImpl
 			BeneficiaryRepository repository, 
 			BeneficiaryDatabaseMapper mapper) {
 		super(repository, mapper);
+        log.info("Continuando a inicialização do serviço...");
 		this.repository = repository;
 		this.mapper = mapper;
 	}
