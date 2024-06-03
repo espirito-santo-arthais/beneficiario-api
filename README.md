@@ -6,50 +6,72 @@ Esta aplicação é uma API REST desenvolvida em Java utilizando Spring Boot par
 
 As demais operações de CRUD dos documentos não foram solicitadas nesta primeira demanda e provavelmente serão objeto de um outro ciclo de desenvolvimento.
 
-Também não foram solicitados testes unitários, e2e ou outros tipos de testes, que acreditamos ficariam também para outros cíclos de desenvolvimento.o
+Também não foram solicitados testes unitários, e2e ou outros tipos de testes, que acreditamos ficariam também para outros cíclos de desenvolvimento.
+
 ## Funcionalidades
 - **Cadastrar um beneficiário junto com seus documentos**
 - **Listar todos os beneficiários cadastrados**
 - **Listar todos os documentos de um beneficiário a partir de seu id**
 - **Atualizar os dados cadastrais de um beneficiário**
-- **Remover um beneficiário**
+- **Remover um beneficiário**
 
 ## Tecnologias Utilizadas
-- Java 21- Spring Boot 3.2.5- Banco de Dados H2 (em memória)- Spring Data JPA- Spring Security- Swagger/OpenAPI para documentação- Maven para gerenciamento de dependências
+
+- Java 21
+- Spring Boot 3.2.5
+- Banco de Dados H2 (em memória)
+- Spring Data JPA
+- Spring Security
+- Swagger/OpenAPI para documentação
+- Maven para gerenciamento de dependências
 
 ## Arquitetura do Software
-A aplicação segue uma arquitetura em camadas, dividida em três camadas principais: `resources`, `domain` e `infrastructure`. Essa abordagem adota o padrão de projeto **Arquitetura Hexagonal** (também conhecido como **Arquitetura Ports and Adapters**), que visa isolar a lógica de negócios das outras partes do sistema.
 
-### 1. Camada Resources
-- **Responsabilidade:** Esta é a camada mais externa da aplicação e é responsável por definir os endpoints da API REST.
+A aplicação segue uma arquitetura em camadas, dividida em três camadas principais: `resources`, `domain` e `infrastructure`. Essa abordagem adota o padrão de projeto **Arquitetura Hexagonal** (também conhecido como **Arquitetura Ports and Adapters**), que visa isolar a lógica de negócios das outras partes do sistema.
 
-- **Função:** Recebe as requisições HTTP dos clientes, valida os dados e encaminha as chamadas para a camada de domínio.
+### 1. Camada Resources
 
-- **Transformação:** Utiliza mapeadores (mappers) para converter os dados recebidos em objetos de domínio apropriados.
+- **Responsabilidade:** Esta é a camada mais externa da aplicação e é responsável por definir os endpoints da API REST.
+
+- **Função:** Recebe as requisições HTTP dos clientes, valida os dados e encaminha as chamadas para a camada de domínio.
+
+- **Transformação:** Utiliza mapeadores (mappers) para converter os dados recebidos em objetos de domínio apropriados.
 
 ### 2. Camada Domain
-- **Responsabilidade:** Centraliza a lógica de negócios da aplicação.
 
-- **Função:** Implementa as regras de negócios, validações específicas e processos centrais da aplicação.
+- **Responsabilidade:** Centraliza a lógica de negócios da aplicação.
 
-- **Isolamento:** A camada de domínio é independente das outras camadas, garantindo que as regras de negócios não sejam afetadas por detalhes de infraestrutura ou de apresentação.
+- **Função:** Implementa as regras de negócios, validações específicas e processos centrais da aplicação.
 
-### 3. Camada Infrastructure
+- **Isolamento:** A camada de domínio é independente das outras camadas, garantindo que as regras de negócios não sejam afetadas por detalhes de infraestrutura ou de apresentação.
 
-- **Responsabilidade:** Gerencia a persistência dos dados no banco de dados, utilizando JPA.
+### 3. Camada Infrastructure
 
-- **Função:** Realiza as operações de CRUD e interações diretas com o banco de dados.
+- **Responsabilidade:** Gerencia a persistência dos dados no banco de dados, utilizando JPA.
 
-- **Transformação:** Utiliza mapeadores (mappers) para converter os objetos de domínio em entidades persistentes e vice-versa.
+- **Função:** Realiza as operações de CRUD e interações diretas com o banco de dados.
+
+- **Transformação:** Utiliza mapeadores (mappers) para converter os objetos de domínio em entidades persistentes e vice-versa.
 
 Essa estrutura em camadas facilita a manutenção, teste e evolução do sistema, permitindo que mudanças em uma camada não afetem as outras.
-## Banco de Dados
+
+## Banco de Dados
+
 A aplicação utiliza o banco de dados H2, que é um banco de dados em memória e embarcado. Isso significa que os dados são armazenados apenas na memória enquanto a aplicação está em execução e são perdidos quando a aplicação é parada. Portanto, a cada novo start da aplicação, é necessário reincluir os registros.
+
 ### Configuração do Banco de Dados
+
 O banco de dados H2 é configurado automaticamente pela aplicação Spring Boot com os seguintes parâmetros:
-- **URL:** `jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=PostgreSQL`- **Driver:** `org.h2.Driver`- **Usuário:** `sa`- **Senha:** (vazia)- **Dialeto:** `org.hibernate.dialect.H2Dialect`
+
+- **URL:** `jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=PostgreSQL`
+- **Driver:** `org.h2.Driver`
+- **Usuário:** `sa`
+- **Senha:** (vazia)
+- **Dialeto:** `org.hibernate.dialect.H2Dialect`
+
 ### Massa de Dados para Teste Funcional
-Para facilitar os testes funcionais, aqui está uma massa de dados que pode ser utilizada para incluir registros na aplicação:
+
+Para facilitar os testes funcionais, aqui está uma massa de dados que pode ser utilizada para incluir registros na aplicação:
 
 ```json
 {
@@ -179,18 +201,24 @@ A documentação dos endpoints está disponível através do Swagger UI. A inter
 ### Passos para Executar
 
 1. **Clone o repositório:**
-    
-    git clone https://github.com/seu-usuario/beneficiario-api.git
+
+    ``` bash
+    git clone https://github.com/espirito-santo-arthais/beneficiario-api.git
     cd beneficiario-api
+    ```
 
-2. **Compile o projeto:**
+1. **Compile o projeto:**
 
+    ``` bash
     mvn clean install
+    ```
+    
+2. **Execute a aplicação:**
 
-3. **Execute a aplicação:**
-
+    ``` bash
     mvn spring-boot:run
-
+    ```
+    
 A aplicação estará disponível em [http://localhost:8080/beneficiario-api/v1](http://localhost:8080/beneficiario-api/v1).
 
 ### Observação
@@ -202,9 +230,9 @@ Certifique-se de definir as variáveis de ambiente `TOKEN_KEY` e `TOKEN_VALUE` c
 Para mais informações ou questões, entre em contato com a equipe:
 
 - **Nome:** Equipe Ekan
-- **Email:** contato@ekan.com.br
+- **Email:** pdantas@ekan.com.br
 - **URL:** [https://ekan.com.br/contato.html](https://ekan.com.br/contato.html)
 
 ---
 
-Desenvolvido por Ekan Systems. Todos os direitos reservados.
+Desenvolvido por ekan.com.br. Todos os direitos reservados.
