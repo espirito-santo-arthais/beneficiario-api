@@ -40,7 +40,7 @@ public class DocumentResourceMapper
                         Document model = Document.builder()
                                 .id(UUID.randomUUID())
                                 .beneficiary(Beneficiary.builder().id(dtoTemp.getBeneficiaryId()).build())
-                                .documentTypeEnum(dtoTemp.getDocumentTypeEnum())
+                                .documentType(dtoTemp.getDocumentType())
                                 .description(dtoTemp.getDescription())
                                 .insertDate(now)
                                 .updateDate(now)
@@ -73,7 +73,7 @@ public class DocumentResourceMapper
                         
                         Document model = Document.builder()
                                 .id(dtoTemp.getId())
-                                .documentTypeEnum(dtoTemp.getDocumentTypeEnum())
+                                .documentType(dtoTemp.getDocumentType())
                                 .description(dtoTemp.getDescription())
                                 .updateDate(now)
                                 .build();
@@ -102,7 +102,7 @@ public class DocumentResourceMapper
                     try {
                         DocumentResponseDto dto = DocumentResponseDto.builder()
                                 .id(modelTemp.getId())
-                                .documentTypeEnum(modelTemp.getDocumentTypeEnum())
+                                .documentType(modelTemp.getDocumentType())
                                 .description(modelTemp.getDescription())
                                 .insertDate(modelTemp.getInsertDate())
                                 .updateDate(modelTemp.getUpdateDate())

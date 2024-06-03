@@ -4,10 +4,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import lombok.extern.slf4j.Slf4j;
 
 @Configuration
@@ -41,21 +44,26 @@ public class OpenApiConfig {
 	@Value("${api.info.licenseUrl}")
 	public String licenseUrl;
 
+	@Value("${api.auth.header.token.key}")
+	private String apiAuthHeaderTokenKey;
+
     @Bean
     OpenAPI customOpenAPI() {
-//    	final String securitySchemeName = "bearerAuth";
+    	final String securitySchemeName = "apiKey";
+    	
+        log.info("Configuring OpenAPI with title: {}", title);
 
-		return new OpenAPI()
-//				.addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
-//		        	.components(new Components()
-//		                .addSecuritySchemes(
-//		                		securitySchemeName,
-//		                		new SecurityScheme()
-//		                        	.name(securitySchemeName)
-//		                        	.type(SecurityScheme.Type.HTTP)
-//		                        	.scheme("bearer")
-//		                        	.bearerFormat("JWT")))
-				.info(new Info()
+        OpenAPI openApi = new OpenAPI()
+	            .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
+	            .components(new Components()
+	                .addSecuritySchemes(
+	                	securitySchemeName,
+	                    new SecurityScheme()
+	                        .name(securitySchemeName)
+	                        .type(SecurityScheme.Type.APIKEY)
+	                        .in(SecurityScheme.In.HEADER)
+	                        .name(apiAuthHeaderTokenKey)))
+	            .info(new Info()
 				.title(title)
 				.description(description)
 				.version(version)
@@ -68,35 +76,10 @@ public class OpenApiConfig {
 						.name(license)
 						.url(licenseUrl))
 				);
-				
+		
+        log.info("OpenAPI configuration completed successfully.");
+
+        return openApi;
 	}
     
-    // Grupo para a versão completa da API
-//    @Bean
-//    GroupedOpenApi apiGroupFull() {
-//        return GroupedOpenApi.builder()
-//                .group("01 - Versão Completa")
-//                .packagesToScan("br.com.grupogrowth7.calendar.api.resources.controllers")
-//                .build();
-//    }
-
-    // Grupo para um subconjunto específico da API (exemplo: Poder de Mãe)
-//    @Bean
-//    GroupedOpenApi apiGroupSubset() {
-//        return GroupedOpenApi.builder()
-//                .group("02 - Poder de Mãe")
-//                .pathsToMatch(
-//                		"/internals/program-users/**", 
-//                		"/calendars/**", 
-//                		"/events/**")
-//                .pathsToExclude(
-//                		"/calendars/integrations/**", 
-//                		"/calendars/sincronizations/**", 
-//                		"/calendars/streamings/**", 
-//                		"/events/integrations/**", 
-//                		"/events/sincronizations/**", 
-//                		"/events/streamings/**")
-//                .build();
-//    }
-
 }

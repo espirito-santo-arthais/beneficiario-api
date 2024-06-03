@@ -17,7 +17,7 @@ public class Document extends AbstractModel {
 	private Beneficiary beneficiary;
 
 	@Nullable
-	private DocumentTypeEnum documentTypeEnum;
+	private DocumentTypeEnum documentType;
 
 	@Nullable
 	@Size(	min = 1,
@@ -27,7 +27,7 @@ public class Document extends AbstractModel {
 
 	public boolean hasUpdate() {
 		// O beneficiário de um documento nunca é alterado.
-		return this.documentTypeEnum != null 
+		return this.documentType != null 
 				|| this.description != null 
 				|| this.insertDate != null 
 				|| this.updateDate != null;

@@ -49,7 +49,7 @@ public class DocumentEntity extends AbstractEntity {
 	@NotNull(message = "Não pode ser nulo")
 	@Enumerated(EnumType.STRING)
 	@EqualsAndHashCode.Include
-	private DocumentTypeEnum documentTypeEnum;
+	private DocumentTypeEnum documentType;
 
 	@Column(name = "descricao", length = 100)
 	@NotNull(message = "Não pode ser nulo")

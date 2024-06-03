@@ -15,6 +15,7 @@ import br.com.ekan.beneficiario.api.domain.models.Document;
 import br.com.ekan.beneficiario.api.infrastructure.database.exceptions.AbstractDatabaseException;
 import br.com.ekan.beneficiario.api.infrastructure.database.services.BeneficiaryDatabaseService;
 import br.com.ekan.beneficiario.api.infrastructure.database.services.DocumentDatabaseService;
+import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,8 +29,14 @@ public class BeneficiaryDomainServiceImpl implements BeneficiaryDomainService {
 	public BeneficiaryDomainServiceImpl(
 			@Lazy BeneficiaryDatabaseService databaseService,
 			@Lazy DocumentDatabaseService documentDatabaseService) {
+		log.info("Inicializando o serviço...");
 		this.databaseService = databaseService;
 		this.documentDatabaseService = documentDatabaseService;
+	}
+
+	@PostConstruct
+	public void postConstruct() {
+		log.info("Serviço inicializado com sucesso!...");
 	}
 
 	@Transactional
@@ -54,16 +61,6 @@ public class BeneficiaryDomainServiceImpl implements BeneficiaryDomainService {
 			
 			// Salva o beneficiário sem os documentos
 			Beneficiary createdModel = databaseService.post(model);
-
-	        // Verifica duplicação de documentType para o beneficiário
-	        for (Document document : documentList) {
-	        	boolean exists = documentDatabaseService.existsByBeneficiaryAndDocumentType(createdModel.getId(), document.getDocumentTypeEnum());
-	        	if (exists) {
-	        		String message = String.format("Documento do tipo %s já existe para o beneficiário.", document.getDocumentTypeEnum());
-	                log.warn(message);
-	                throw new WarningDomainException(message);
-	        	}
-	        }
 
 			// Associa os documentos ao beneficiário criado e salva cada documento.
 	        // Depois atualiza a lista de documentos com os documentos salvos.

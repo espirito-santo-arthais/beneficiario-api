@@ -38,16 +38,22 @@ logging:
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
     org.springframework.orm.jpa: DEBUG
-
+    
 api:
   info:
+    title: "@name@"
+    description: "@description@"
+    version: "@version@"
+    termsOfServiceUrl: https://ekan.com.br/legal/termos.html
     contact:
-      email: contato@ekan.com.br
       name: Equipe Ekan
       url: https://ekan.com.br/contato.html
-    description: '@description@'
+      email: contato@ekan.com.br
     license: Copyright 2023 Ekan - Todos os direitos reservados.
     licenseUrl: https://ekan.com.br/legal/licenca.html
-    termsOfServiceUrl: https://ekan.com.br/legal/termos.html
-    title: '@name@'
-    version: '@version@'
+  auth:
+    header:
+      token:
+        key: "${TOKEN_KEY:x-auth-secret-key}"
+        value: "${TOKEN_VALUE:123456}"
+    

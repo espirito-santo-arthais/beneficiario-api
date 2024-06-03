@@ -19,14 +19,14 @@ import lombok.experimental.SuperBuilder;
 public class DocumentUpdateRequestDto extends AbstractUpdateRequestDto {
 
 	@Nullable
-	private DocumentTypeEnum documentTypeEnum;
+	private DocumentTypeEnum documentType;
 
 	@Nullable
 	@Size(min = 1, max = 100, message = "Deve ter entre 1 e 100 caracteres")
 	private String description;
 
 	public boolean hasUpdate() {
-		return this.documentTypeEnum != null
+		return this.documentType != null
 				|| this.description != null;
 	}
 

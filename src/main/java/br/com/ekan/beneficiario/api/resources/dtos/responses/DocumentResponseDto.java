@@ -29,7 +29,7 @@ public class DocumentResponseDto extends AbstractResponseDto {
 
 	@NotNull(message = "Não pode ser nulo")
 	@EqualsAndHashCode.Include
-	private DocumentTypeEnum documentTypeEnum;
+	private DocumentTypeEnum documentType;
 
 	@NotNull(message = "Não pode ser nulo")
 	@Size(min = 1, max = 100, message = "Deve ter entre 1 e 100 caracteres")

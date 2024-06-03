@@ -13,6 +13,7 @@ import br.com.ekan.beneficiario.api.domain.models.Beneficiary;
 import br.com.ekan.beneficiario.api.domain.models.Document;
 import br.com.ekan.beneficiario.api.infrastructure.database.exceptions.AbstractDatabaseException;
 import br.com.ekan.beneficiario.api.infrastructure.database.services.DocumentDatabaseService;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -25,8 +26,14 @@ public class DocumentDomainServiceImpl implements DocumentDomainService {
 	public DocumentDomainServiceImpl(
 			@Lazy DocumentDatabaseService databaseService,
 			@Lazy BeneficiaryDomainServiceImpl beneficiaryDomainService) {
+		log.info("Inicializando o serviço...");
 		this.databaseService = databaseService;
 		this.beneficiaryDomainService = beneficiaryDomainService;
+	}
+
+	@PostConstruct
+	public void postConstruct() {
+		log.info("Serviço inicializado com sucesso!...");
 	}
 
 	@Override
@@ -88,11 +95,11 @@ public class DocumentDomainServiceImpl implements DocumentDomainService {
 		try {
 			Document storedModel = databaseService.getById(model.getId());
 			if (model.hasUpdate()) {
-	            if (model.getDocumentTypeEnum() != null && !model.getDocumentTypeEnum().equals(storedModel.getDocumentTypeEnum())) {
-	                storedModel.setDocumentTypeEnum(model.getDocumentTypeEnum());
+	            if (model.getDocumentType() != null && !model.getDocumentType().equals(storedModel.getDocumentType())) {
+	                storedModel.setDocumentType(model.getDocumentType());
 	            }
 	            if (model.getDescription() != null && !model.getDescription().equals(storedModel.getDescription())) {
-	                storedModel.setDocumentTypeEnum(model.getDocumentTypeEnum());
+	                storedModel.setDocumentType(model.getDocumentType());
 	            }
 	            if (model.getInsertDate() != null && !model.getInsertDate().equals(storedModel.getInsertDate())) {
 	                storedModel.setInsertDate(model.getInsertDate());
