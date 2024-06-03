@@ -70,7 +70,6 @@ public class SecurityConfig {
                 authorize.requestMatchers("/webjars/**").permitAll();
                 authorize.requestMatchers("/v3/api-docs/**").permitAll();
                 authorize.requestMatchers("/actuator/**").permitAll();
-                //authorize.requestMatchers("/beneficiarios/**").authenticated();
 
                 // Endpoints autenticados
                 authorize.anyRequest().authenticated();
